@@ -20,23 +20,25 @@
             </div>
             <hr>
             <form id="formularioContacto"> 
-                <div class="name_label">
-                    <p>Full Name:</p>
-                </div>
-                <input type="text" class="input" id="nombre"> 
-                <div class="email_label">
-                    <p>your Email:</p>
-                </div>
-                <input type="email" class="input" id="email"> 
-                <div class="mensaje_label">
-                    <p>your message:</p>
-                </div>
-                <input type="text" class="msj" id="mensaje">
+                <label for="emailInput" class="titulo">titulo:</label>
+        <input type="text" id="emailInput" placeholder="titulo" required><br><br>
+        
+        <label class="titulo" for="nameInput">Nombre:</label>
+        <input type="text" id="nameInput" placeholder="Nombre" required><br><br>
 
-                <button type="submit" id="input" class="btn">submit</button>
+        <label for="messageInput" class="titulo">Mensaje:</label><br><br>
+        <textarea class="textarea" id="messageInput" placeholder="Mensaje" rows="4" required></textarea><br><br>
+
+        <button class="btn"type="button" onclick="guardarDatos()">Guardar</button>
+        <button  class="btn"type="button" onclick="borrarDatos()">Borrar</button>
             </form>
         </div>
     </div>
+    <h2>Datos Guardados:</h2>
+    <p>Titulo: <span id="savedEmail"></span></p>
+    <p>Nombre: <span id="savedName"></span></p>
+    <p>Mensaje: <span id="savedMessage"></span></p>
+
 
    <script src="app.js"></script>
 </body>

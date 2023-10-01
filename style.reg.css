@@ -7,7 +7,6 @@
     text-align: center;
 }
 
-
 .caja {
     border: rgb(0, 0, 0) 2px solid;
     width: 400px;
@@ -16,46 +15,31 @@
 
 }
 
-.container{
-width: 100%;
-
-}
 .titulo{
     color: black;
     font-weight: bold;
     text-align: center;
-    font-size: 30px;
+    font-size: 20px;
 }
-.name{
+.nombre{
     color: black;
     font-weight: bold;
-  
-}
-.email{
-    color: black;
-    font-weight: bold;
-}
-.mensaje{
-    color: black;
-    font-weight: bold;
-}
-.input{
-    width: 350px;
-    height:50px ;
-}
-
-.msj{
-    width: 350px;
-    height:75px ;
+    text-align: center;
+    font-size: 25px;
 }
 .btn{
-        width: 380px;
-        height: 40px;
-        color: #fff;
-        padding: 5px 10px;
-        font-weight: bold;
-        cursor: pointer;
-        border: none;
-        background-color: #3d348b; 
-        margin-top: 10px;     
+    width: 380px;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: #3d348b; 
+    margin-top: 10px;     
+}
+.textarea{
+    width: 380px;
+    height: 100px;
+    padding: 5px 10px;
 }
