@@ -1,0 +1,50 @@
+h1 {
+    color: black;
+    text-align: center;
+}
+
+.date {
+    color: gray;
+
+}
+
+.header {
+    padding: 60px;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+}
+
+.sub {
+    color: grey;
+    font-size: 15px;
+}
+
+.caja {
+    border: rgb(0, 0, 0) 2px solid;
+    width: 500px;
+    margin: 0 auto;
+    padding: 10px;
+
+}
+
+.container{
+width: 100%;
+
+}
+.titulo{
+    color: black;
+    font-weight: bold;
+}
+
+.btn{
+    width: 500px;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: #3d348b; 
+    margin-top: 10px;     
+}
