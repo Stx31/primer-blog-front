@@ -1,20 +1,32 @@
-const formulario = document.getElementById("formularioContacto"); // Selecciona el formulario correcto
-formulario.addEventListener("submit", function (event) {
-    event.preventDefault(); // Evitar que se envíe el formulario
+function guardarDatos() {
+    var email = document.getElementById("emailInput").value;
+    var name = document.getElementById("nameInput").value;
+    var message = document.getElementById("messageInput").value;
 
-    // Obtener los valores de los campos
-    const nombre = document.getElementById("nombre").value;
-    const email = document.getElementById("email").value;
-    const mensaje = document.getElementById("mensaje").value;
+    localStorage.setItem("userEmail", email);
+    localStorage.setItem("userName", name);
+    localStorage.setItem("userMessage", message);
 
-    // Guardar los valores en Local Storage
-    localStorage.setItem("nombre", nombre);
-    localStorage.setItem("email", email);
-    localStorage.setItem("mensaje", mensaje);
+    mostrarDatos();
+}
 
-    // Mostrar un mensaje en pantalla
-    alert("Datos guardados en Local Storage.");
+function mostrarDatos() {
+    var email = localStorage.getItem("userEmail") || "";
+    var name = localStorage.getItem("userName") || "";
+    var message = localStorage.getItem("userMessage") || "";
 
-    // Limpiar el formulario
-    formulario.reset();
-});
+    document.getElementById("savedEmail").textContent = email;
+    document.getElementById("savedName").textContent = name;
+    document.getElementById("savedMessage").textContent = message;
+}
+
+function borrarDatos() {
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userMessage");
+
+    mostrarDatos();
+}
+
+
+window.onload = mostrarDatos;
