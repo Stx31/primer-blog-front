@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.reg.css">
+    <link rel="stylesheet" href="style.reg.css"> 
 </head>
 
 <body>
@@ -19,23 +19,26 @@
                 <h3>Inquiry form </h3>
             </div>
             <hr>
-            <div class="name">
-                <p>Full Name:</p>
-            </div>
-            <input type="text" class="input">
-            <div class="email">
-                <p>your Email:</p>
-            </div>
-            <input type="text" class="input">
-            <div class="mensaje">
-                <p>your message:</p>
-            </div>
-            <input type="text" class="msj">
-            <a href="index.html">
-                <button type="submit" class="btn">submit</button></a>
-        </div>
+            <form id="formularioContacto"> 
+                <div class="name_label">
+                    <p>Full Name:</p>
+                </div>
+                <input type="text" class="input" id="nombre"> 
+                <div class="email_label">
+                    <p>your Email:</p>
+                </div>
+                <input type="email" class="input" id="email"> 
+                <div class="mensaje_label">
+                    <p>your message:</p>
+                </div>
+                <input type="text" class="msj" id="mensaje">
 
+                <button type="submit" id="input" class="btn">submit</button>
+            </form>
+        </div>
     </div>
+
+   <script src="app.js"></script>
 </body>
 
 </html>
