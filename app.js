@@ -7,7 +7,7 @@ function guardarDatos() {
     localStorage.setItem("userName", name);
     localStorage.setItem("userMessage", message);
 
-    mostrarDatos(); 
+    mostrarDatos();
 }
 
 function mostrarDatos() {
@@ -25,7 +25,22 @@ function borrarDatos() {
     localStorage.removeItem("userName");
     localStorage.removeItem("userMessage");
 
-    mostrarDatos(); 
+    mostrarDatos();
 }
-
 window.onload = mostrarDatos; 
+document.addEventListener("DOMContentLoaded", function () {
+    const botonHora = document.getElementById("botonHora");
+    const horaMostrada = document.getElementById("horaMostrada");
+    const botonBorrar = document.getElementById("botonBorrar");
+
+    botonHora.addEventListener("click", function () {
+        const fechaActual = new Date();
+        const horaPresionado = fechaActual.toLocaleTimeString();
+
+        horaMostrada.textContent = ` ${horaPresionado}`;
+    });
+
+    botonBorrar.addEventListener("click", function () {
+        horaMostrada.textContent = "";
+    });
+});
