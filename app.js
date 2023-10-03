@@ -23,6 +23,22 @@ function mostrarDatos() {
     document.getElementById("savedHour").textContent = hora;
 }
 
+
+
+function mostrarMensajes() {
+    var mensajesGuardados = document.getElementById("mensajesGuardados");
+    mensajesGuardados.innerHTML = "";
+
+   
+    var storedData = JSON.parse(localStorage.getItem("mensajes")) || [];
+
+ 
+    for (var i = 0; i < storedData.length; i++) {
+        var listItem = document.createElement("li");
+        listItem.textContent = `${storedData[i].nombre}: ${storedData[i].mensaje}`;
+        mensajesGuardados.appendChild(listItem);
+    }
+}
 function borrarDatos() {
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
