@@ -2,15 +2,17 @@ function guardarDatos() {
     var email = document.getElementById("emailInput").value;
     var name = document.getElementById("nameInput").value;
     var message = document.getElementById("messageInput").value;
-
+    var horaActual = new Date().toLocaleTimeString();
     localStorage.setItem("userEmail", email);
     localStorage.setItem("userName", name);
     localStorage.setItem("userMessage", message);
+    localStorage.setItem("userHour", horaActual);
 
     mostrarDatos();
 }
 
 function mostrarDatos() {
+    var hora = localStorage.getItem("userHour") || "";
     var email = localStorage.getItem("userEmail") || "";
     var name = localStorage.getItem("userName") || "";
     var message = localStorage.getItem("userMessage") || "";
@@ -18,29 +20,36 @@ function mostrarDatos() {
     document.getElementById("savedEmail").textContent = email;
     document.getElementById("savedName").textContent = name;
     document.getElementById("savedMessage").textContent = message;
+    document.getElementById("savedHour").textContent = hora;
 }
 
+
+
+function mostrarMensajes() {
+    var mensajesGuardados = document.getElementById("mensajesGuardados");
+    mensajesGuardados.innerHTML = "";
+
+   
+    var storedData = JSON.parse(localStorage.getItem("mensajes")) || [];
+
+ 
+    for (var i = 0; i < storedData.length; i++) {
+        var listItem = document.createElement("li");
+        listItem.textContent = `${storedData[i].nombre}: ${storedData[i].mensaje}`;
+        mensajesGuardados.appendChild(listItem);
+    }
+}
 function borrarDatos() {
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
     localStorage.removeItem("userMessage");
+    localStorage.removeItem("userHour");
 
     mostrarDatos();
 }
-window.onload = mostrarDatos; 
-document.addEventListener("DOMContentLoaded", function () {
-    const botonHora = document.getElementById("botonHora");
-    const horaMostrada = document.getElementById("horaMostrada");
-    const botonBorrar = document.getElementById("botonBorrar");
+window.onload = mostrarDatos;
 
-    botonHora.addEventListener("click", function () {
-        const fechaActual = new Date();
-        const horaPresionado = fechaActual.toLocaleTimeString();
-
-        horaMostrada.textContent = ` ${horaPresionado}`;
-    });
-
-    botonBorrar.addEventListener("click", function () {
-        horaMostrada.textContent = "";
-    });
+document.getElementById("botonHora").addEventListener("click", function () {
+    window.location.href = "index.html";
 });
+
