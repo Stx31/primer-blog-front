@@ -5,42 +5,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.reg.css"> 
+    <link rel="stylesheet" href="style.reg.css">
 </head>
 
 <body>
     <div class="header">
-        <h1>Inquiry Form using Javascript</h1>
+        <h1>Inquiry Form using JavaScript</h1>
     </div>
 
     <div class="container">
         <div class="caja">
             <div class="titulo">
-                <h3>Inquiry form </h3>
+                <h3>Inquiry Form</h3>
             </div>
             <hr>
-            <form id="formularioContacto"> 
-                <label for="emailInput" class="titulo">titulo:</label>
-        <input type="text" id="emailInput" placeholder="titulo" required><br><br>
-        
-        <label class="titulo" for="nameInput">Nombre:</label>
-        <input type="text" id="nameInput" placeholder="Nombre" required><br><br>
+            <form id="formularioContacto">
+                <label for="emailInput">Título:</label>
+                <input type="text" id="emailInput" placeholder="Título" required><br><br>
 
-        <label for="messageInput" class="titulo">Mensaje:</label><br><br>
-        <textarea class="textarea" id="messageInput" placeholder="Mensaje" rows="4" required></textarea><br><br>
-
-        <button class="btn"type="button" onclick="guardarDatos()">Guardar</button>
-        <button  class="btn"type="button" onclick="borrarDatos()">Borrar</button>
+                <label for="nameInput">Nombre:</label>
+                <input type="text" id="nameInput" placeholder="Nombre" required><br><br>
+                <p id="horaMostrada"></p>
+                <label for="messageInput">Mensaje:</label><br><br>
+                <textarea id="messageInput" placeholder="Mensaje" rows="4" required></textarea><br><br>
+                <button class="btn" type="button"  id="botonHora"onclick="guardarDatos()">Guardar</button>
+                <button class="btn" type="button" id="botonBorrar" onclick="borrarDatos()">Borrar</button>
+                
+                
             </form>
+            <a href="index.html"><button class="btn">Página Principal</button></a>
         </div>
     </div>
-    <h2>Datos Guardados:</h2>
-    <p>Titulo: <span id="savedEmail"></span></p>
-    <p>Nombre: <span id="savedName"></span></p>
-    <p>Mensaje: <span id="savedMessage"></span></p>
 
-
-   <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>

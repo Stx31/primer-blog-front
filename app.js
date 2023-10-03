@@ -27,6 +27,20 @@ function borrarDatos() {
 
     mostrarDatos();
 }
+window.onload = mostrarDatos; 
+document.addEventListener("DOMContentLoaded", function () {
+    const botonHora = document.getElementById("botonHora");
+    const horaMostrada = document.getElementById("horaMostrada");
+    const botonBorrar = document.getElementById("botonBorrar");
 
+    botonHora.addEventListener("click", function () {
+        const fechaActual = new Date();
+        const horaPresionado = fechaActual.toLocaleTimeString();
 
-window.onload = mostrarDatos;
+        horaMostrada.textContent = ` ${horaPresionado}`;
+    });
+
+    botonBorrar.addEventListener("click", function () {
+        horaMostrada.textContent = "";
+    });
+});
