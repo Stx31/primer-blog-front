@@ -43,3 +43,16 @@
     height: 100px;
     padding: 5px 10px;
 }
+
+.btn2 {
+    width: 500px;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: #ff0202; 
+    margin-top: 10px;   
+    
+}

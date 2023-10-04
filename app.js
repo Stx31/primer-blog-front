@@ -1,55 +1,19 @@
-function guardarDatos() {
-    var email = document.getElementById("emailInput").value;
-    var name = document.getElementById("nameInput").value;
-    var message = document.getElementById("messageInput").value;
-    var horaActual = new Date().toLocaleTimeString();
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userName", name);
-    localStorage.setItem("userMessage", message);
-    localStorage.setItem("userHour", horaActual);
+var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
+var mensajesDiv = document.getElementById("mensajes");
 
-    mostrarDatos();
-}
-
-function mostrarDatos() {
-    var hora = localStorage.getItem("userHour") || "";
-    var email = localStorage.getItem("userEmail") || "";
-    var name = localStorage.getItem("userName") || "";
-    var message = localStorage.getItem("userMessage") || "";
-
-    document.getElementById("savedEmail").textContent = email;
-    document.getElementById("savedName").textContent = name;
-    document.getElementById("savedMessage").textContent = message;
-    document.getElementById("savedHour").textContent = hora;
-}
-
-
-
-function mostrarMensajes() {
-    var mensajesGuardados = document.getElementById("mensajesGuardados");
-    mensajesGuardados.innerHTML = "";
-
-   
-    var storedData = JSON.parse(localStorage.getItem("mensajes")) || [];
-
- 
-    for (var i = 0; i < storedData.length; i++) {
-        var listItem = document.createElement("li");
-        listItem.textContent = `${storedData[i].nombre}: ${storedData[i].mensaje}`;
-        mensajesGuardados.appendChild(listItem);
-    }
-}
-function borrarDatos() {
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userMessage");
-    localStorage.removeItem("userHour");
-
-    mostrarDatos();
-}
-window.onload = mostrarDatos;
-
-document.getElementById("botonHora").addEventListener("click", function () {
-    window.location.href = "index.html";
+userDataArray.forEach(function(userData, index) {
+    var mensaje = `
+        <p>Email: ${userData.email || ""}
+        <br>Nombre: ${userData.name || ""}
+        <br>Mensaje: ${userData.message || ""}
+        <br>Hora: ${userData.hora || ""}
+        <button onclick="borrarMensaje(${index})">Borrar</button>
+        </p>`;
+    mensajesDiv.innerHTML += mensaje;
 });
 
+function borrarMensaje(index) {
+    userDataArray.splice(index, 1);
+    localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
+    location.reload(); 
+}

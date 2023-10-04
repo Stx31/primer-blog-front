@@ -10,34 +10,27 @@
 
 <body>
     <div class="header">
-        <h1>Inquiry Form using JavaScript</h1>
+        <h1>Formulario</h1>
     </div>
 
     <div class="container">
         <div class="caja">
             <div class="titulo">
-                <h3>Inquiry Form</h3>
+                <h3>Ingresa los datos</h3>
             </div>
             <hr>
             <form id="formularioContacto">
-                <label for="emailInput">Título:</label>
-                <input type="text" id="emailInput" placeholder="Título" required><br><br>
-
-                <label for="nameInput">Nombre:</label>
-                <input type="text" id="nameInput" placeholder="Nombre" required><br><br>
-                
-                <label for="messageInput">Mensaje:</label><br><br>
-                <textarea id="messageInput" placeholder="Mensaje" rows="4" required></textarea><br><br>
-                <button class="btn" type="button" id="botonHora" onclick="guardarDatos()">Guardar</button>
-                <button class="btn" type="button" id="botonBorrar" onclick="borrarDatos()">Borrar</button>
-
-
+                <input type="email" id="emailInput" placeholder="Email">
+                <input type="text" id="nameInput" placeholder="Nombre">
+                <textarea id="messageInput" placeholder="Mensaje"></textarea>
+                <a href="index.html">
+                    <button class="btn" id="guardarMensaje">Guardar Mensaje</button>
+                </a>
             </form>
 
         </div>
     </div>
-
-    <script src="app.js"></script>
+    <script src="reg.js"></script>
 </body>
 
 </html>
