@@ -1,19 +1,34 @@
 var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
 var mensajesDiv = document.getElementById("mensajes");
 
-userDataArray.forEach(function(userData, index) {
-    var mensaje = `
-        <p>Email: ${userData.email || ""}
-        <br>Nombre: ${userData.name || ""}
-        <br>Mensaje: ${userData.message || ""}
-        <br>Hora: ${userData.hora || ""}
-        <button onclick="borrarMensaje(${index})">Borrar</button>
-        </p>`;
-    mensajesDiv.innerHTML += mensaje;
-});
+function mostrarMensajes() {
+    var userDataArrayJSON = localStorage.getItem("userDataArray");
+    if (userDataArrayJSON) {
+        userDataArray = JSON.parse(userDataArrayJSON);
+    }
+
+    var mensajesDiv = document.getElementById("mensajes");
+    mensajesDiv.innerHTML = "";
+    userDataArray.forEach(function (userData, index) {
+        var fechaFormateada = userData.fecha ? new Date(userData.fecha).toLocaleString() : "";
+        var mensaje = `
+            <div class="mensaje">
+                <p>Email: ${userData.email || ""}
+                <br>Nombre: ${userData.name || ""}
+                <br>Mensaje: ${userData.message || ""}
+                <br>Fecha: ${fechaFormateada || ""}
+                <button class="btn2"  onclick="borrarMensaje(${index})">Borrar</button>
+                </p>
+            </div>`;
+        mensajesDiv.innerHTML += mensaje;
+    });
+}
 
 function borrarMensaje(index) {
     userDataArray.splice(index, 1);
     localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    location.reload(); 
+    mostrarMensajes(); 
 }
+
+
+mostrarMensajes();

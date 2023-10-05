@@ -45,7 +45,7 @@
 }
 
 .btn2 {
-    width: 500px;
+    width: 380px;
     height: 40px;
     color: #fff;
     padding: 5px 10px;
@@ -56,3 +56,18 @@
     margin-top: 10px;   
     
 }
+.container{
+    width: 100%;
+    }
+#cancelar{
+        width: 380px;
+        height: 40px;
+        color: #fff;
+        padding: 5px 10px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        background-color: #ff0000; 
+        margin-top: 10px;     
+    }
+    
