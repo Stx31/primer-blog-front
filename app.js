@@ -7,11 +7,11 @@ function mostrarMensajes() {
         var fechaFormateada = userData.fecha ? new Date(userData.fecha).toLocaleString() : "";
         var mensaje = `
         <div  class="caja"> 
-                <p>Email: ${userData.email || ""}
+                <p>autor: ${userData.email || ""}
                 <br>Nombre: ${userData.name || ""}
                 <br>Mensaje: ${userData.message || ""}
                 <br>Fecha: ${fechaFormateada || ""}
-                <button class="btn2"  data-index="${index}">Borrar</button>
+                <button class="btn2"data-index="${index}">Borrar</button>
                 </p>
             </div>`;
         mensajesDiv.innerHTML += mensaje;
