@@ -2,12 +2,6 @@ var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
 var mensajesDiv = document.getElementById("mensajes");
 
 function mostrarMensajes() {
-    var userDataArrayJSON = localStorage.getItem("userDataArray");
-    if (userDataArrayJSON) {
-        userDataArray = JSON.parse(userDataArrayJSON);
-    }
-
-    var mensajesDiv = document.getElementById("mensajes");
     mensajesDiv.innerHTML = "";
     userDataArray.forEach(function (userData, index) {
         var fechaFormateada = userData.fecha ? new Date(userData.fecha).toLocaleString() : "";
@@ -17,7 +11,7 @@ function mostrarMensajes() {
                 <br>Nombre: ${userData.name || ""}
                 <br>Mensaje: ${userData.message || ""}
                 <br>Fecha: ${fechaFormateada || ""}
-                <button class="btn2"  onclick="borrarMensaje(${index})">Borrar</button>
+                <button class="btn2"  data-index="${index}">Borrar</button>
                 </p>
             </div>`;
         mensajesDiv.innerHTML += mensaje;
@@ -30,5 +24,11 @@ function borrarMensaje(index) {
     mostrarMensajes(); 
 }
 
+mensajesDiv.addEventListener("click", function (event) {
+    if (event.target.classList.contains("btn2")) {
+        var index = event.target.getAttribute("data-index");
+        borrarMensaje(index);
+    }
+});
 
 mostrarMensajes();
