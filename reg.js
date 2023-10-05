@@ -6,10 +6,13 @@ function mostrarMensajes() {
     mensajesDiv.innerHTML = "";
     userDataArray.forEach(function (userData, index) {
         var mensaje = `
+        <div  class="caja"> 
             <p>Email: ${userData.email || ""}
             <br>Nombre: ${userData.name || ""}
             <br>Mensaje: ${userData.message || ""}
-            </p>`;
+           
+            </p>
+            </div>`;
         mensajesDiv.innerHTML += mensaje;
 
         
@@ -42,8 +45,6 @@ function guardarDatos() {
     userDataArray.push(nuevoDato);
     localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
     mostrarMensajes();
-
-
     document.getElementById("emailInput").value = "";
     document.getElementById("nameInput").value = "";
     document.getElementById("messageInput").value = "";

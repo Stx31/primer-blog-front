@@ -6,7 +6,7 @@ function mostrarMensajes() {
     userDataArray.forEach(function (userData, index) {
         var fechaFormateada = userData.fecha ? new Date(userData.fecha).toLocaleString() : "";
         var mensaje = `
-            <div class="mensaje">
+        <div  class="caja"> 
                 <p>Email: ${userData.email || ""}
                 <br>Nombre: ${userData.name || ""}
                 <br>Mensaje: ${userData.message || ""}
