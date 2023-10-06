@@ -39,7 +39,7 @@
     padding: 5px 10px;
 }
 
-.btn2 {
+.btn-borrar {
     width: 380px;
     height: 40px;
     color: #fff;
@@ -74,3 +74,14 @@
     padding: 10px;
     
    }
+   #guardarMensaje{
+    width: 380px;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: #0011ff; 
+    margin-top: 10px;     
+}

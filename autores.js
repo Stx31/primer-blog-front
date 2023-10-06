@@ -10,10 +10,7 @@ function mostrarMensajes() {
         userDataArray.forEach(function (userData, index) {
             var mensajeHTML = `
                 <div class="caja">
-                    <h2>${userData.name || ""}</h2>
-                    <p>${userData.message || ""}</p>
                     <p>${userData.email || ""}</p>
-                    <p>${userData.fecha || ""}</p>
                     <button class="btn-borrar" data-index="${index}">Borrar</button>
                 </div>`;
             mensajesDiv.innerHTML += mensajeHTML;

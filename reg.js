@@ -1,71 +1,78 @@
+
 var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
 var mensajesDiv = document.getElementById("mensajes");
-var fechaHoraDiv = document.getElementById("fechaHora"); 
 
 function mostrarMensajes() {
     mensajesDiv.innerHTML = "";
     userDataArray.forEach(function (userData, index) {
+        var fechaFormateada = formatearFecha(new Date(userData.fecha));
         var mensaje = `
-        <div  class="caja"> 
-            <p>Email: ${userData.email || ""}
-            <br>Nombre: ${userData.name || ""}
-            <br>Mensaje: ${userData.message || ""}
-           
-            </p>
+            <div class="caja"> 
+                <p> ${userData.email || ""}
+                <br> ${userData.name || ""}
+                <br> ${userData.message || ""}
+                <br> ${fechaFormateada || ""}
+                <button class="btn2" data-index="${index}">Borrar</button>
+                </p>
             </div>`;
         mensajesDiv.innerHTML += mensaje;
-
-        
     });
 }
-var boton = document.getElementById("guardarMensaje");
 
-boton.addEventListener("click", function() {
-  
-    window.location.href = "index.html";
-});
-
-
+function formatearFecha(fecha) {
+    var mes = fecha.toLocaleString('default', { month: 'long' });
+    var dia = fecha.getDate();
+    var año = fecha.getFullYear();
+    var hora = fecha.getHours();
+    var minutos = fecha.getMinutes();
+    return `${mes} ${dia} ${año} - ${hora}:${minutos}`;
+}
 
 function guardarDatos() {
     var email = document.getElementById("emailInput").value;
     var name = document.getElementById("nameInput").value;
     var message = document.getElementById("messageInput").value;
-    
-    var fechaActual = new Date(); 
-    var fechaFormateada = fechaActual.toLocaleString();
+    var fechaActual = new Date();
+    var fechaFormateada = formatearFecha(fechaActual);
 
     var nuevoDato = {
         email: email,
         name: name,
         message: message,
-        fecha: fechaFormateada,
+        fecha: fechaFormateada
     };
-
     userDataArray.push(nuevoDato);
     localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
     mostrarMensajes();
+
+  
     document.getElementById("emailInput").value = "";
     document.getElementById("nameInput").value = "";
     document.getElementById("messageInput").value = "";
-
-  
-    fechaHoraDiv.innerHTML = "Fecha y hora de última acción: " + fechaFormateada;
 }
 
-function cancelar() {
-    localStorage.removeItem("userDataArray");
-    userDataArray = [];
-    mostrarMensajes();
+function borrarMensaje(index) {
+    userDataArray.splice(index, 1);
+    localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
+    mostrarMensajes(); 
 }
 
 document.getElementById("guardarMensaje").addEventListener("click", function () {
     guardarDatos();
 });
 
-document.getElementById("cancelar").addEventListener("click", function () {
-    cancelar();
+mensajesDiv.addEventListener("click", function (event) {
+    if (event.target.classList.contains("btn2")) {
+        var index = event.target.getAttribute("data-index");
+        borrarMensaje(index);
+    }
+});
+
+var cancelarButton = document.getElementById("cancelar");
+
+cancelarButton.addEventListener("click", function () {
+    localStorage.removeItem("userDataArray");
+    window.location.href = "index.html";
 });
 
 mostrarMensajes();
-
