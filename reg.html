@@ -18,17 +18,17 @@
             </div>
             <hr>
             <form id="formularioContacto">
-                <input type="text" id="emailInput" placeholder="Autor">
-                <input type="text" id="nameInput" placeholder="Titulo">
-                <textarea id="messageInput" placeholder="Mensaje"></textarea>
+                <input type="text" id="emailInput" placeholder="Autor" required>
+                <input type="text" id="nameInput" placeholder="Titulo" required>
+                <textarea id="messageInput" placeholder="Mensaje" required></textarea>
                 <button id="guardarMensaje">Guardar Mensaje</button>
-                <a href="index.html">
                 <button class="btn" id="cancelar">Cancelar</button>
-            </a>
-                
             </form>
         </div>
     </div>
+
+    <div id="mensajes"></div>
+
     <script src="reg.js"></script>
 </body>
 </html>

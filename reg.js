@@ -1,6 +1,11 @@
-
 var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
 var mensajesDiv = document.getElementById("mensajes");
+var formularioContacto = document.getElementById("formularioContacto");
+
+formularioContacto.addEventListener("submit", function (e) {
+    e.preventDefault(); 
+    guardarDatos();
+});
 
 function mostrarMensajes() {
     mensajesDiv.innerHTML = "";
@@ -45,10 +50,12 @@ function guardarDatos() {
     localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
     mostrarMensajes();
 
-  
     document.getElementById("emailInput").value = "";
     document.getElementById("nameInput").value = "";
     document.getElementById("messageInput").value = "";
+
+    
+    window.location.href = 'index.html';
 }
 
 function borrarMensaje(index) {
@@ -57,10 +64,6 @@ function borrarMensaje(index) {
     mostrarMensajes(); 
 }
 
-document.getElementById("guardarMensaje").addEventListener("click", function () {
-    guardarDatos();
-});
-
 mensajesDiv.addEventListener("click", function (event) {
     if (event.target.classList.contains("btn2")) {
         var index = event.target.getAttribute("data-index");
@@ -68,11 +71,5 @@ mensajesDiv.addEventListener("click", function (event) {
     }
 });
 
-var cancelarButton = document.getElementById("cancelar");
-
-cancelarButton.addEventListener("click", function () {
-    localStorage.removeItem("userDataArray");
-    window.location.href = "index.html";
-});
-
 mostrarMensajes();
+
