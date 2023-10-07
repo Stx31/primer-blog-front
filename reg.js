@@ -1,58 +1,78 @@
-var userDataArray = [];
+
+var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
+var mensajesDiv = document.getElementById("mensajes");
+
+function mostrarMensajes() {
+    mensajesDiv.innerHTML = "";
+    userDataArray.forEach(function (userData, index) {
+        var fechaFormateada = formatearFecha(new Date(userData.fecha));
+        var mensaje = `
+            <div class="caja"> 
+                <p> ${userData.email || ""}
+                <br> ${userData.name || ""}
+                <br> ${userData.message || ""}
+                <br> ${fechaFormateada || ""}
+                <button class="btn2" data-index="${index}">Borrar</button>
+                </p>
+            </div>`;
+        mensajesDiv.innerHTML += mensaje;
+    });
+}
+
+function formatearFecha(fecha) {
+    var mes = fecha.toLocaleString('default', { month: 'long' });
+    var dia = fecha.getDate();
+    var año = fecha.getFullYear();
+    var hora = fecha.getHours();
+    var minutos = fecha.getMinutes();
+    return `${mes} ${dia} ${año} - ${hora}:${minutos}`;
+}
 
 function guardarDatos() {
     var email = document.getElementById("emailInput").value;
     var name = document.getElementById("nameInput").value;
     var message = document.getElementById("messageInput").value;
-    var hora = new Date().toLocaleTimeString();
+    var fechaActual = new Date();
+    var fechaFormateada = formatearFecha(fechaActual);
 
     var nuevoDato = {
         email: email,
         name: name,
         message: message,
-        hora: hora
+        fecha: fechaFormateada
     };
     userDataArray.push(nuevoDato);
     localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
     mostrarMensajes();
 
-    window.location.href = "index.html";
-}
-
-function mostrarMensajes() {
-    var userDataArrayJSON = localStorage.getItem("userDataArray");
-    if (userDataArrayJSON) {
-        userDataArray = JSON.parse(userDataArrayJSON);
-    }
-
-    var mensajesDiv = document.getElementById("mensajes");
-    mensajesDiv.innerHTML = "";
-    userDataArray.forEach(function (userData, index) {
-        var fechaYHora = new Date(userData.hora).toLocaleString(); 
-        var mensaje = `
-            <p>Email: ${userData.email || ""}
-            <br>Nombre: ${userData.name || ""}
-            <br>Mensaje: ${userData.message || ""}
-            <br>Fecha y Hora: ${fechaYHora || ""}
-            <button class="btn2"  onclick="borrarMensaje(${index})">Borrar</button>
-            </p>`;
-        mensajesDiv.innerHTML += mensaje;
-    });
+  
+    document.getElementById("emailInput").value = "";
+    document.getElementById("nameInput").value = "";
+    document.getElementById("messageInput").value = "";
 }
 
 function borrarMensaje(index) {
     userDataArray.splice(index, 1);
     localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    mostrarMensajes();
+    mostrarMensajes(); 
 }
 
 document.getElementById("guardarMensaje").addEventListener("click", function () {
     guardarDatos();
-    mostrarMensajes();
 });
 
-window.onload = mostrarMensajes;
+mensajesDiv.addEventListener("click", function (event) {
+    if (event.target.classList.contains("btn2")) {
+        var index = event.target.getAttribute("data-index");
+        borrarMensaje(index);
+    }
+});
 
-document.getElementById("guardarMensaje").addEventListener("click", function () {
+var cancelarButton = document.getElementById("cancelar");
+
+cancelarButton.addEventListener("click", function () {
+    localStorage.removeItem("userDataArray");
     window.location.href = "index.html";
 });
+
+mostrarMensajes();

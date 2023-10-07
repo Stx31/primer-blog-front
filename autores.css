@@ -16,18 +16,7 @@
 
 }
 
-.titulo{
-    color: black;
-    font-weight: bold;
-    text-align: center;
-    font-size: 20px;
-}
-.nombre{
-    color: black;
-    font-weight: bold;
-    text-align: center;
-    font-size: 25px;
-}
+
 .btn{
     background-color: blue;
     width: 380px;
