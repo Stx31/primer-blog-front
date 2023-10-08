@@ -64,14 +64,7 @@ function guardarDatos() {
         fecha: fechaFormateada
     };
 
-    var correoExistente = userDataArray.some(function (userData) {
-        return userData.email === email;
-    });
-
-    if (correoExistente) {
-        alert("Este usuario ya ha sido registrado.");
-        return;
-    }
+  
 
     userDataArray.push(nuevoDato);
 
