@@ -1,26 +1,37 @@
 var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
+
 var mensajesDiv = document.getElementById("mensajes");
 var formularioContacto = document.getElementById("formularioContacto");
 
 formularioContacto.addEventListener("submit", function (e) {
-    e.preventDefault(); 
+    e.preventDefault();
     guardarDatos();
+});
+
+var cancelarBoton = document.getElementById("cancelar");
+cancelarBoton.addEventListener("click", function () {
+    window.location.href = 'index.html';
+});
+
+var guardarMensajeBoton = document.getElementById("guardarMensaje");
+guardarMensajeBoton.addEventListener("click", function () {
+    window.location.href = 'index.html';
 });
 
 function mostrarMensajes() {
     mensajesDiv.innerHTML = "";
     userDataArray.forEach(function (userData, index) {
         var fechaFormateada = formatearFecha(new Date(userData.fecha));
-        var mensaje = `
-            <div class="caja"> 
-                <p> ${userData.email || ""}
-                <br> ${userData.name || ""}
-                <br> ${userData.message || ""}
-                <br> ${fechaFormateada || ""}
+        var mensajeHTML = `
+            <div class="caja">
+                <p>${userData.email || ""}
+                <br>${userData.name || ""}
+                <br>${userData.message || ""}
+                <br>${fechaFormateada || ""}
                 <button class="btn2" data-index="${index}">Borrar</button>
                 </p>
             </div>`;
-        mensajesDiv.innerHTML += mensaje;
+        mensajesDiv.innerHTML += mensajeHTML;
     });
 }
 
@@ -37,6 +48,12 @@ function guardarDatos() {
     var email = document.getElementById("emailInput").value;
     var name = document.getElementById("nameInput").value;
     var message = document.getElementById("messageInput").value;
+
+    if (!email || !name || !message) {
+        alert("Por favor, complete todos los campos.");
+        return;
+    }
+
     var fechaActual = new Date();
     var fechaFormateada = formatearFecha(fechaActual);
 
@@ -46,7 +63,11 @@ function guardarDatos() {
         message: message,
         fecha: fechaFormateada
     };
+
+  
+
     userDataArray.push(nuevoDato);
+
     localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
     mostrarMensajes();
 
@@ -54,14 +75,13 @@ function guardarDatos() {
     document.getElementById("nameInput").value = "";
     document.getElementById("messageInput").value = "";
 
-    
     window.location.href = 'index.html';
 }
 
 function borrarMensaje(index) {
     userDataArray.splice(index, 1);
     localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    mostrarMensajes(); 
+    mostrarMensajes();
 }
 
 mensajesDiv.addEventListener("click", function (event) {
@@ -72,4 +92,3 @@ mensajesDiv.addEventListener("click", function (event) {
 });
 
 mostrarMensajes();
-

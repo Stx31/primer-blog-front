@@ -1,7 +1,6 @@
 
 var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
 
-
 function mostrarMensajes() {
     var mensajesDiv = document.getElementById("mensajes");
     mensajesDiv.innerHTML = "";
@@ -28,7 +27,7 @@ function mostrarMensajes() {
             });
         });
     } else {
-        mensajesDiv.innerHTML = "<p></p>";
+        mensajesDiv.innerHTML = "<p> no hay  datos</p>";
     }
 }
 
