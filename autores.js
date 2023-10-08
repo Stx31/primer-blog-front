@@ -1,22 +1,30 @@
-
 var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
-
 
 function mostrarMensajes() {
     var mensajesDiv = document.getElementById("mensajes");
     mensajesDiv.innerHTML = "";
 
+    var mensajesUnicos = {};
+
     if (userDataArray.length > 0) {
         userDataArray.forEach(function (userData, index) {
-            var mensajeHTML = `
-                <div class="caja">
-                    <p>${userData.email || ""}</p>
-                    <button class="btn-borrar" data-index="${index}">Borrar</button>
-                </div>`;
-            mensajesDiv.innerHTML += mensajeHTML;
+         
+            var mensajeIdentificador = `${userData.email || ""}-${userData.name || ""}-${userData.message || ""}`;
+
+           
+            if (!mensajesUnicos[mensajeIdentificador]) {
+                var mensajeHTML = `
+                    <div class="caja">
+                        <p>${userData.email || ""}</p>
+                        <button class="btn-borrar" data-index="${index}">Borrar</button>
+                    </div>`;
+                mensajesDiv.innerHTML += mensajeHTML;
+
+          
+                mensajesUnicos[mensajeIdentificador] = true;
+            }
         });
 
-     
         var botonesBorrar = document.querySelectorAll(".btn-borrar");
         botonesBorrar.forEach(function (boton) {
             boton.addEventListener("click", function () {
@@ -28,7 +36,6 @@ function mostrarMensajes() {
         mensajesDiv.innerHTML = "<p></p>";
     }
 }
-
 
 function borrarMensaje(index) {
     userDataArray.splice(index, 1);
