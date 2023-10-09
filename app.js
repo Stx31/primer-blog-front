@@ -27,7 +27,7 @@ function mostrarMensajes() {
             });
         });
     } else {
-        mensajesDiv.innerHTML = "<p> no hay  datos</p>";
+        mensajesDiv.innerHTML = `<p class="nhc">No hay datos</p>`;
     }
 }
 
