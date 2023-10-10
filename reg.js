@@ -16,7 +16,7 @@ function borrarDatosIngresadosYRedirigir() {
     document.getElementById("emailInput").value = "";
     document.getElementById("nameInput").value = "";
     document.getElementById("messageInput").value = "";
-    window.location.href = 'index.html';
+   
 }
 
 function mostrarMensajes() {
