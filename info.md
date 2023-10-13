@@ -21,6 +21,11 @@ Application Programming Interface:
  -uniform Interface
      Estas reglas se basan en el protocolo de comunicación utilizado, como HTTP en aplicaciones web, y aseguran que las solicitudes y respuestas sean predecibles y estandarizadas.
 
+     manipula informacion 
+     auto descript  mensajes
+     hypermedia
+     request  identification
+
 #Comando curl
 es una herramienta de línea de comandos, que permite transferir datos hacia o desde un servidor sin interacción del usuario utilizando la biblioteca libcurl. cURL también se puede utilizar para solucionar problemas de conexión.
 
