@@ -17,8 +17,7 @@ exports.handler = async function (context, event, callback) {
       // You can have multiple medias on each message
       const pics = await message.media().list();
       for (const pic of pics) {
-        // Add to the gallery array, use the outer loop's message value to put the same body
-        // for each pic
+        // Agregue a la array de la galería, use el valor del mensaje del bucle externo para colocar el mismo cuerpo para cada foto
         gallery.push({
           src: "https://api.twilio.com" + pic.uri.replace(".json", ""),
           description: message.body,
