@@ -1,7 +1,0 @@
-curl  --version 
-
-
-
-
-
-
