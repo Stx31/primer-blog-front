@@ -81,17 +81,3 @@ connect('mongodb+srv://kh1327303:<password>@cluster0.kyzpqkc.mongodb.net/Node-AP
 }).catch((error)=>{
 console.log(error)
 })
-
-
-const mongoose = require('mongoose');
-
-const dbUri = 'mongodb+srv://kh1327303:<password>@cluster0.kyzpqkc.mongodb.net/Node-API?retryWrites=true&w=majority';
-
-
-mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('Conexión a MongoDB exitosa');
-  })
-  .catch((error) => {
-    console.error('Error al conectar a MongoDB:', error);
-  });
