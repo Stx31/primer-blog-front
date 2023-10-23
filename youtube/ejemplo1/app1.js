@@ -1,30 +1,21 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const mensajeForm = document.getElementById('mensaje-form');
-    const mensajeResponse = document.getElementById('mensaje-response');
+// app.js
+// Configurar Firebase (reemplaza con tu propia configuración)
+const firebaseConfig = {
+    apiKey: "TUAUTHAPIKEY",
+    authDomain: "tudominio.firebaseapp.com",
+    databaseURL: "https://tudominio.firebaseio.com",
+    projectId: "tu-proyecto-id",
+};
 
-    mensajeForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-        const mensajeTextarea = document.getElementById('mensaje');
-        const mensaje = mensajeTextarea.value;
+const input = document.getElementById('pokemon-input');
+const guardarBtn = document.getElementById('guardar-btn');
 
-        fetch('procesar.php', {
-            method: 'POST',
-            body: JSON.stringify({ mensaje }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            mensajeResponse.textContent = data.message;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            mensajeResponse.textContent = 'Error al enviar el mensaje.';
-        });
-
-        // Limpiar el formulario
-        mensajeTextarea.value = '';
-    });
+guardarBtn.addEventListener('click', () => {
+    const pokemonName = input.value;
+    // Guarda el nombre en la base de datos
+    database.ref('pokemons').push().set({ name: pokemonName });
+    input.value = '';
 });

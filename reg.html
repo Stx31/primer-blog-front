@@ -17,18 +17,18 @@
                 <h3>Ingresa los datos</h3>
             </div>
             <hr>
-            <form id="formularioContacto">
-                <input type="text" id="emailInput" placeholder="Autor" required>
-                <input type="text" id="nameInput" placeholder="Titulo" required>
-                <textarea id="messageInput" placeholder="Mensaje" required></textarea>
+            <form id="formularioContacto" action="/guardar-mensaje" method="post">
+                <input type="text" id="emailInput" name="author" placeholder="Autor" required>
+                <input type="text" id="nameInput" name="title" placeholder="Título" required>
+                <textarea id="messageInput" name="message" placeholder="Mensaje" required></textarea>
                 <button id="guardarMensaje">Guardar Mensaje</button>
-                <button id="cancelar">Cancelar</button> 
-            </form>
+                <button id="cancelar">Cancelar</button>
+              </form>
         </div>
     </div>
 
     
-  <script src="reg.js">
+  <script src="server.js">
     
   </script>
 </body>
