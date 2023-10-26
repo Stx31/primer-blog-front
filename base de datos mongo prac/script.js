@@ -1,26 +1,19 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const User = require('./User'); // Importa el modelo de usuario
-const ejs = require('ejs'); // Agrega el motor de plantillas EJS
+document.getElementById('registroForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    
+    const nombre = document.getElementById('nombre').value;
+    const email = document.getElementById('email').value;
+    const contrasena = document.getElementById('contrasena').value;
 
-const app = express();
-app.use(express.json());
-app.set('view engine', 'ejs'); 
-
-
-mongoose.connect('mongodb://localhost:27017/your-database', { useNewUrlParser: true });
-
-
-app.get('/register', (req, res) => {
-    res.render('register'); 
-});
-
-app.get('/login', (req, res) => {
-    res.render('login');
-});
-
-
-app.listen(3000, () => {
-    console.log('Servidor en ejecución en el puerto 3000');
+    // Envía los datos al servidor usando Fetch API o XMLHttpRequest
+    fetch('registrar.php', {
+        method: 'POST',
+        body: JSON.stringify({ nombre, email, contrasena }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('mensaje').innerHTML = data.message;
+    })
+    .catch(error => console.error(error));
 });
