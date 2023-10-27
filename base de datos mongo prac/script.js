@@ -5,7 +5,7 @@ document.getElementById('registroForm').addEventListener('submit', function (e) 
     const email = document.getElementById('email').value;
     const contrasena = document.getElementById('contrasena').value;
 
-    // Envía los datos al servidor usando Fetch API o XMLHttpRequest
+   
     fetch('registrar.php', {
         method: 'POST',
         body: JSON.stringify({ nombre, email, contrasena }),
@@ -17,3 +17,4 @@ document.getElementById('registroForm').addEventListener('submit', function (e) 
     })
     .catch(error => console.error(error));
 });
+//http://localhost:5000/ver_usuarios
