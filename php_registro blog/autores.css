@@ -1,0 +1,40 @@
+
+.header {
+    padding: 60px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    text-align: center;
+}
+
+.caja {
+    border: rgb(0, 0, 0) 2px solid;
+    width: 400px;
+    margin: 0 auto;
+    padding: 10px;
+    
+
+}
+
+
+.btn{
+    background-color: blue;
+    width: 380px;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;}
+    .btn-borrar{
+        background-color: rgb(255, 0, 0);
+        width: 380px;
+        height: 40px;
+        color: #fff;
+        padding: 5px 10px;}
+    
+
+  .nhc{
+    padding: 60px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 25px;
+    text-align: center;
+  }      
