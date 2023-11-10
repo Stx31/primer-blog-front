@@ -17,13 +17,12 @@
                 <h3>Ingresa los datos</h3>
             </div>
             <hr>
-            <form id="formularioContacto" action="/guardar-mensaje" method="post">
-                <input type="text" id="emailInput" name="author" placeholder="Autor" required>
-                <input type="text" id="nameInput" name="title" placeholder="Título" required>
-                <textarea id="messageInput" name="message" placeholder="Mensaje" required></textarea>
-                <button id="guardarMensaje">Guardar Mensaje</button>
-                <button id="cancelar">Cancelar</button>
-              </form>
+            <form action="http://localhost:3000/guardar-mensaje" method="post">
+                <input type="text" name="author" placeholder="Autor" required>
+                <input type="text" name="title" placeholder="Título" required>
+                <textarea name="message" placeholder="Mensaje" required></textarea>
+                <button type="submit">Guardar Mensaje</button>
+            </form>
         </div>
     </div>
 
@@ -31,8 +30,7 @@
     <button id="getDataBtn">Obtener Datos</button>
     <p id="data"></p>
     
-  <script src="reg.js">
-    
-  </script>
+    <script src="reg.js"></script>
 </body>
 </html>
+

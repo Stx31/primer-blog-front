@@ -36,3 +36,14 @@ function borrarMensaje(index) {
 }
 
 mostrarMensajes();
+const autoresElement = document.getElementById('autores');
+
+fetch('http://localhost:3000/autores')
+  .then(response => response.json())
+  .then(data => {
+    autoresElement.innerHTML = '<h2>Autores</h2><ul>' + data.map(autor => `<li>${autor}</li>`).join('') + '</ul>';
+  })
+  .catch(error => {
+    console.error(error);
+    autoresElement.innerHTML = '<p>Error al obtener los autores.</p>';
+  });

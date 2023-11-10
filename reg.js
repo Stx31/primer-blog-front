@@ -95,11 +95,17 @@ mensajesDiv.addEventListener("click", function (event) {
 
 mostrarMensajes();
 
-document.getElementById('getDataBtn').addEventListener('click', () => {
-    fetch('http://localhost:3001/api/data')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('data').innerText = data.message;
-      })
-      .catch(error => console.error(error));
-  });
+//postman
+const getDataBtn = document.getElementById('getDataBtn');
+
+getDataBtn.addEventListener('click', () => {
+  fetch('http://localhost:3000/obtener-mensajes')
+    .then(response => response.json())
+    .then(data => {
+     
+      pm.environment.set('detalles_obtenidos', JSON.stringify(data));
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
