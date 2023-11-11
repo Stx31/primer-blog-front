@@ -5,32 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario</title>
     <link rel="stylesheet" href="style.reg.css">
+
 </head>
 <body>
-    <div class="header">
-        <h1>Formulario</h1>
-    </div>
-
     <div class="container">
         <div class="caja">
             <div class="titulo">
                 <h3>Ingresa los datos</h3>
             </div>
             <hr>
-            <form action="http://localhost:3000/guardar-mensaje" method="post">
-                <input type="text" name="author" placeholder="Autor" required>
-                <input type="text" name="title" placeholder="Título" required>
-                <textarea name="message" placeholder="Mensaje" required></textarea>
+            <form id="messageForm">
+                <input type="text" id="author" placeholder="Autor" required>
+                <input type="text" id="title" placeholder="Título" required>
+                <textarea id="message" placeholder="Mensaje" required></textarea>
                 <button type="submit">Guardar Mensaje</button>
             </form>
         </div>
     </div>
 
     <h1>Frontend</h1>
-    <button id="getDataBtn">Obtener Datos</button>
-    <p id="data"></p>
+    <div id="data"></div>
     
     <script src="reg.js"></script>
 </body>
 </html>
-

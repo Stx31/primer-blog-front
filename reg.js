@@ -1,111 +1,35 @@
-var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
-var mensajesDiv = document.getElementById("mensajes");
-var formularioContacto = document.getElementById("formularioContacto");
+const messageForm = document.getElementById('messageForm');
+const dataDisplay = document.getElementById('data');
 
-formularioContacto.addEventListener("submit", function (e) {
-    e.preventDefault();
-    guardarDatos();
-});
+messageForm.addEventListener('submit', (event) => {
+    event.preventDefault(); 
 
-var cancelarBoton = document.getElementById("cancelar");
-cancelarBoton.addEventListener("click", function () {
-    borrarDatosIngresadosYRedirigir();
-});
+    const author = document.getElementById('author').value;
+    const title = document.getElementById('title').value;
+    const message = document.getElementById('message').value;
 
-function borrarDatosIngresadosYRedirigir() {
-    document.getElementById("emailInput").value = "";
-    document.getElementById("nameInput").value = "";
-    document.getElementById("messageInput").value = "";
-   
-}
-
-function mostrarMensajes() {
-    mensajesDiv.innerHTML = "";
-    userDataArray.forEach(function (userData, index) {
-        var fechaFormateada = formatearFecha(new Date(userData.fecha));
-        var mensajeHTML = `
-            <div class="caja">
-                <p>${userData.email || ""}
-                <br>${userData.name || ""}
-                <br>${userData.message || ""}
-                <br>${fechaFormateada || ""}
-                <button class="btn2" data-index="${index}">Borrar</button>
-                </p>
-            </div>`;
-        mensajesDiv.innerHTML += mensajeHTML;
-    });
-}
-var guardarMensajeBoton = document.getElementById("guardarMensaje");
-guardarMensajeBoton.addEventListener("click", function () {
-   
-    window.location.href = 'index.html';
-});
-
-function formatearFecha(fecha) {
-    var mes = fecha.toLocaleString('default', { month: 'long' });
-    var dia = fecha.getDate();
-    var año = fecha.getFullYear();
-    var hora = fecha.getHours();
-    var minutos = fecha.getMinutes();
-    return `${mes} ${dia} ${año} - ${hora}:${minutos}`;
-}
-
-function guardarDatos() {
-    var email = document.getElementById("emailInput").value;
-    var name = document.getElementById("nameInput").value;
-    var message = document.getElementById("messageInput").value;
-
-    if (!email || !name || !message) {
-        alert("Por favor, complete todos los campos.");
-        return;
-    }
-
-    var fechaActual = new Date();
-    var fechaFormateada = formatearFecha(fechaActual);
-
-    var nuevoDato = {
-        email: email,
-        name: name,
-        message: message,
-        fecha: fechaFormateada
-    };
-
-    userDataArray.push(nuevoDato);
-
-    localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    mostrarMensajes();
-
-    document.getElementById("emailInput").value = "";
-    document.getElementById("nameInput").value = "";
-    document.getElementById("messageInput").value = "";
-}
-
-function borrarMensaje(index) {
-    userDataArray.splice(index, 1);
-    localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    mostrarMensajes();
-}
-
-mensajesDiv.addEventListener("click", function (event) {
-    if (event.target.classList.contains("btn2")) {
-        var index = event.target.getAttribute("data-index");
-        borrarMensaje(index);
-    }
-});
-
-mostrarMensajes();
-
-//postman
-const getDataBtn = document.getElementById('getDataBtn');
-
-getDataBtn.addEventListener('click', () => {
-  fetch('http://localhost:3000/obtener-mensajes')
+    fetch('/guardar-mensaje', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author, title, message }),
+    })
     .then(response => response.json())
     .then(data => {
-     
-      pm.environment.set('detalles_obtenidos', JSON.stringify(data));
+        displayMessages(data);
     })
-    .catch(error => {
-      console.error(error);
-    });
+    .catch(error => console.error('Error al guardar datos: ' + error));
 });
+
+function displayMessages(mensaje) {
+    dataDisplay.innerHTML = '';
+
+    const messageDiv = document.createElement('div');
+    messageDiv.innerHTML = `
+        <strong>Autor:</strong> ${mensaje.author}<br>
+        <strong>Título:</strong> ${mensaje.title}<br>
+        <strong>Mensaje:</strong> ${mensaje.message}<br><br>
+    `;
+    dataDisplay.appendChild(messageDiv);
+}
