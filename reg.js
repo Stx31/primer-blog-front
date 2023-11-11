@@ -1,7 +1,7 @@
 const messageForm = document.getElementById('messageForm');
 const dataDisplay = document.getElementById('data');
 
-messageForm.addEventListener('submit', (event) => {
+//messageForm.addEventListener('submit', (event) => {
     event.preventDefault(); 
 
     const author = document.getElementById('author').value;
@@ -20,9 +20,9 @@ messageForm.addEventListener('submit', (event) => {
         displayMessages(data);
     })
     .catch(error => console.error('Error al guardar datos: ' + error));
-});
+//});
 
-function displayMessages(mensaje) {
+//function displayMessages(mensaje) {
     dataDisplay.innerHTML = '';
 
     const messageDiv = document.createElement('div');
@@ -32,4 +32,4 @@ function displayMessages(mensaje) {
         <strong>Mensaje:</strong> ${mensaje.message}<br><br>
     `;
     dataDisplay.appendChild(messageDiv);
-}
+//}

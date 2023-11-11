@@ -1,16 +1,20 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const bodyParser = require('body-parser');
 
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(express.static('public'));
 
 app.post('/guardar-mensaje', (req, res) => {
-  const { author, title, message } = req.body;
+    const author = req.body.author;
+    const title = req.body.title;
+    const message = req.body.message;
 
-  console.log(`Autor: ${author}, Título: ${title}, Mensaje: ${message}`);
-  res.json({ message: 'Mensaje guardado correctamente' });
+    res.json({ author, title, message });
 });
 
-app.listen(port, () => {
-  console.log(`Servidor corriendo en el puerto ${port}`);
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
