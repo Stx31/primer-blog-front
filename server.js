@@ -1,20 +1,26 @@
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.use(express.static('public'));
+const savedData = []; 
 
-app.post('/guardar-mensaje', (req, res) => {
-    const author = req.body.author;
-    const title = req.body.title;
-    const message = req.body.message;
+app.post('/guardar-datos', (req, res) => {
+    const { author, title, message } = req.body;
 
-    res.json({ author, title, message });
+  
+    savedData.push({ author, title, message });
+    
+    res.json({ message: 'Mensaje guardado con éxito' });
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+app.get('/obtener-datos', (req, res) => {
+    
+    res.json(savedData);
+});
+
+app.listen(port, () => {
+    console.log(`Servidor escuchando en el puerto ${port}`);
 });

@@ -4,7 +4,7 @@ const port = 3000;
 
 app.use(express.json());
 
-const datos = []; // Almacenaremos los datos en memoria (no recomendado para producción).
+const datos = []; 
 
 app.post('/guardar', (req, res) => {
     const nuevoDato = req.body;
