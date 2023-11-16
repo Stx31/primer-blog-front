@@ -15,8 +15,6 @@ $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
 $correo = isset($_POST['correo']) ? $_POST['correo'] : '';
 $mensaje = isset($_POST['mensaje']) ? $_POST['mensaje'] : '';
 
-echo "DEBUG: Nombre: $nombre, Correo: $correo, Mensaje: $mensaje";
-
 $sql = "INSERT INTO datos (nombre, correo, mensaje) VALUES (?, ?, ?)";
 $statement = mysqli_prepare($conexion, $sql);
 
@@ -27,8 +25,8 @@ $ejecutar = mysqli_stmt_execute($statement);
 if (!$ejecutar) {
     echo "Hubo algún error: " . mysqli_error($conexion);
 } else {
-    echo "Datos guardados correctamente<br><a href='index.html'>Volver</a>";
+    mysqli_close($conexion);
+    header("Location: visualizar.php");
+    exit();
 }
-
-mysqli_close($conexion);
 ?>
