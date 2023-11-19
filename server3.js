@@ -26,5 +26,5 @@ app.get('/obtener-autores', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`);
+  console.log(`Servidor funcionando  en el puerto ${port}`);
 });
