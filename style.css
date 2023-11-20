@@ -49,3 +49,19 @@
             font-size: 25px;
             text-align: center;
           }      
+          #dataContainer {
+            display: flex;
+            flex-direction: column; /* Cambiado de "flex-wrap: wrap;" a "flex-direction: column;" */
+            align-items: center; /* Alinea los elementos al centro horizontalmente */
+        }
+        
+        #dataContainer > div {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            width: 100%; 
+            max-width: 400px; 
+        }
+        

@@ -1,87 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
 
-.header {
-    padding: 60px;
-    text-align: center;
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    text-align: center;
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .caja {
-    border: rgb(0, 0, 0) 2px solid;
-    width: 400px;
-    margin: 0 auto;
-    padding: 10px;
-
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
 }
 
-.titulo{
-    color: black;
-    font-weight: bold;
+.titulo {
     text-align: center;
-    font-size: 20px;
+    margin-bottom: 10px;
 }
 
-.btn{
-    width: 380px;
-    height: 40px;
-    color: #fff;
-    padding: 5px 10px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    background-color: #3d348b; 
-    margin-top: 10px;     
-}
-.textarea{
-    width: 380px;
-    height: 100px;
-    padding: 5px 10px;
+hr {
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
 }
 
-.btn-borrar {
-    width: 380px;
-    height: 40px;
-    color: #fff;
-    padding: 5px 10px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    background-color: #ff0202; 
-    margin-top: 10px;   
-    
+form {
+    display: flex;
+    flex-direction: column;
 }
-.container{
-    width: 100%;
-    }
-#cancelar{
-        width: 380px;
-        height: 40px;
-        color: #fff;
-        padding: 5px 10px;
-        font-weight: bold;
-        cursor: pointer;
-        border: none;
-        background-color: #ff0000; 
-        margin-top: 10px;     
-    }
 
+input,
+textarea {
+    margin-bottom: 15px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 
-   .mensaje{
-    border: rgb(0, 0, 0) 2px solid;
-    width: 400px;
-    margin: 0 auto;
+button {
     padding: 10px;
-    
-   }
-   #guardarMensaje{
-    width: 380px;
-    height: 40px;
+    background-color: #007BFF;
     color: #fff;
-    padding: 5px 10px;
-    font-weight: bold;
-    cursor: pointer;
     border: none;
-    background-color: #0011ff; 
-    margin-top: 10px;     
+    border-radius: 4px;
+    cursor: pointer;
 }
+

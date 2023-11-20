@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario</title>
     <link rel="stylesheet" href="style.reg.css">
 </head>
+
 <body>
     <div class="container">
         <div class="caja">
@@ -17,12 +19,16 @@
                 <input type="text" id="author" placeholder="Autor" required>
                 <input type="text" id="title" placeholder="Título" required>
                 <textarea id="message" placeholder="Mensaje" required></textarea>
-                <button type="submit">Guardar Mensaje</button>
+                <button type="button" onclick="saveData()">Guardar Mensaje</button>
             </form>
         </div>
     </div>
 
+    <div id="dataContainer">
+        
+    </div>
+
     <script src="reg.js"></script>
 </body>
-</html
 
+</html>

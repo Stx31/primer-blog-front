@@ -1,28 +1,51 @@
-document.getElementById('messageForm').addEventListener('submit', function (e) {
-    e.preventDefault();
 
+const savedData = [];
+
+
+function saveData() {
     const author = document.getElementById('author').value;
     const title = document.getElementById('title').value;
     const message = document.getElementById('message').value;
 
-    const data = {
-        author: author,
-        title: title,
-        message: message
-    };
+    if (author && title && message) {
+        const newMessage = {
+            author: author,
+            title: title,
+            message: message
+        };
 
-    fetch('http://localhost:3000/guardar-datos', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(responseData => {
-        alert(`Mensaje guardado con éxito: ${responseData.message}`);
-    })
-    .catch(error => {
-        console.error('Error al enviar datos al servidor:', error);
+        
+        savedData.push(newMessage);
+
+      
+        document.getElementById('messageForm').reset();
+
+       
+        displayData();
+    } else {
+        alert('Por favor, completa todos los campos del formulario.');
+    }
+}
+
+
+function displayData() {
+    const dataContainer = document.getElementById('dataContainer');
+    dataContainer.innerHTML = '';
+
+    savedData.forEach(function (message, index) {
+        const messageDiv = document.createElement('div');
+        messageDiv.innerHTML = `<p><strong>Autor:</strong> ${message.author}</p>
+                                <p><strong>Título:</strong> ${message.title}</p>
+                                <p><strong>Mensaje:</strong> ${message.message}</p>
+                                <button onclick="deleteMessage(${index})">Eliminar Mensaje</button>`;
+        dataContainer.appendChild(messageDiv);
     });
-});
+}
+
+
+function deleteMessage(index) {
+    savedData.splice(index, 1);
+
+  
+    displayData();
+}
