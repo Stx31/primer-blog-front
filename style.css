@@ -51,8 +51,8 @@
           }      
           #dataContainer {
             display: flex;
-            flex-direction: column; /* Cambiado de "flex-wrap: wrap;" a "flex-direction: column;" */
-            align-items: center; /* Alinea los elementos al centro horizontalmente */
+            flex-direction: column; 
+            align-items: center; 
         }
         
         #dataContainer > div {

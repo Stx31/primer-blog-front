@@ -7,20 +7,28 @@ app.use(bodyParser.json());
 
 const savedData = [];
 
-app.post('/guardar-datos', (req, res) => {
+app.post('/guardar', (req, res) => {
     const { nombre, edad } = req.body;
+    const currentTime = new Date();
+    const formattedTime = `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`;
 
-  
     if (nombre === '1234' && edad === '1234') {
-        const successMessage = 'Credenciales correctas. Datos guardados con éxito.';
-        res.status(201).json({ message: successMessage });
+        const data = {
+            nombre,
+            edad,
+            timestamp: formattedTime
+        };
+
+        savedData.push(data);
+        console.log('Datos guardados:', data);
+        res.status(201).json({ message: 'Datos guardados con éxito.' });
     } else {
         const errorMessage = 'Credenciales incorrectas. No se guardaron los datos.';
         res.status(401).json({ error: errorMessage });
     }
 });
 
-app.get('/obtener-datos', (req, res) => {
+app.get('/mostrarDatos', (req, res) => {
     res.json(savedData);
 });
 
@@ -30,5 +38,5 @@ app.delete('/borrar-datos', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Servidor escuchando en el puerto ${port}`);
+    console.log(`Servidor escuchando en http://localhost:${port}`);
 });
