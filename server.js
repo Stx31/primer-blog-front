@@ -8,24 +8,20 @@ app.use(bodyParser.json());
 const savedData = [];
 
 app.post('/guardar', (req, res) => {
-    const { nombre, edad } = req.body;
+    const { author, title, message } = req.body;
     const currentTime = new Date();
     const formattedTime = `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`;
 
-    if (nombre === '1234' && edad === '1234') {
-        const data = {
-            nombre,
-            edad,
-            timestamp: formattedTime
-        };
+    const data = {
+        author,
+        title,
+        message,
+        timestamp: formattedTime
+    };
 
-        savedData.push(data);
-        console.log('Datos guardados:', data);
-        res.status(201).json({ message: 'Datos guardados con éxito.' });
-    } else {
-        const errorMessage = 'Credenciales incorrectas. No se guardaron los datos.';
-        res.status(401).json({ error: errorMessage });
-    }
+    savedData.push(data);
+    console.log('Datos guardados:', data);
+    res.status(201).json({ message: 'Datos guardados con éxito.' });
 });
 
 app.get('/mostrarDatos', (req, res) => {

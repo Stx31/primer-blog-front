@@ -2,19 +2,6 @@ function submitForm() {
     var usernameInput = document.getElementById('nombre').value;
     var passwordInput = document.getElementById('edad').value;
 
-
-    if (usernameInput === '1234' && passwordInput === '1234') {
-    
-        window.location.href = 'index.html';
-    } else {
-       
-        console.log('Credenciales incorrectas');
-    }
-}
-function submitForm() {
-    var usernameInput = document.getElementById('nombre').value;
-    var passwordInput = document.getElementById('edad').value;
-
   
     var formData = new FormData();
     formData.append('nombre', usernameInput);

@@ -1,94 +1,69 @@
-const savedData = [];
+// JavaScript (reg.js)
 
+// Array para almacenar datos
+var data = [];
+
+// Función para guardar datos
 function saveData() {
-    const author = document.getElementById('author').value;
-    const title = document.getElementById('title').value;
-    const message = document.getElementById('message').value;
+    var author = document.getElementById('author').value;
+    var title = document.getElementById('title').value;
+    var message = document.getElementById('message').value;
 
-    if (author && title && message) {
-        const newMessage = {
-            author,
-            title,
-            message,
-            time: getCurrentTime()
-        };
+    // Crear un objeto con los datos
+    var newData = {
+        author: author,
+        title: title,
+        message: message
+    };
 
-        savedData.push(newMessage);
-        clearForm();
-        displayData();
-        sendDataToServer(newMessage);
-    } else {
-        alert('Por favor, completa todos los campos del formulario.');
-    }
-}
+    // Agregar el nuevo objeto al array
+    data.push(newData);
 
-function deleteData() {
-  
-    fetch('http://localhost:3000/borrar-datos', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log('Datos borrados con éxito:', data);
-        alert('Datos borrados con éxito');
-        savedData.length = 0;
-        displayData();
-    })
-    .catch(error => {
-        console.error('Error al borrar datos:', error);
-        alert('Error al borrar datos');
-    });
-}
-
-function displayData() {
-    const dataContainer = document.getElementById('dataContainer');
-    dataContainer.innerHTML = '';
-
-    savedData.forEach((message, index) => {
-        const messageDiv = document.createElement('div');
-        messageDiv.innerHTML = `
-            <p><strong>Autor:</strong> ${message.author}</p>
-            <p><strong>Título:</strong> ${message.title}</p>
-            <p><strong>Mensaje:</strong> ${message.message}</p>
-            <p><strong>Fecha y Hora:</strong> ${message.time}</p>
-            <button onclick="deleteMessage(${index})">Eliminar Mensaje</button>
-        `;
-        dataContainer.appendChild(messageDiv);
-    });
-}
-
-function deleteMessage(index) {
-    savedData.splice(index, 1);
-    displayData();
-}
-
-function getCurrentTime() {
-    const currentTime = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    return currentTime.toLocaleDateString('es-ES', options);
-}
-
-function clearForm() {
+    // Limpiar el formulario
     document.getElementById('messageForm').reset();
+
+    // Llamar a la función para enviar datos a Postman
+    sendDataToPostman(newData);
 }
 
-function sendDataToServer(data) {
+// Función para borrar datos
+function deleteData() {
+    // Limpiar el array
+    data = [];
 
-    fetch('http://localhost:3000/guardar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Datos enviados al servidor:', data);
-    })
-    .catch(error => {
-        console.error('Error al enviar datos al servidor:', error);
-    });
+    // Llamar a la función para borrar datos en Postman
+    deleteDataInPostman();
+
+    // Limpiar el contenedor de datos en el HTML
+    document.getElementById('dataContainer').innerHTML = '';
+}
+
+// Función para enviar datos a Postman
+function sendDataToPostman(newData) {
+    // Aquí debes implementar la lógica para enviar datos a Postman
+    // Puedes usar fetch() o cualquier otra biblioteca para realizar solicitudes HTTP
+    // Por ejemplo:
+    // fetch('tu_url_de_postman', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(newData),
+    // })
+    // .then(response => response.json())
+    // .then(data => console.log('Datos enviados a Postman:', data))
+    // .catch(error => console.error('Error al enviar datos a Postman:', error));
+}
+
+// Función para borrar datos en Postman
+function deleteDataInPostman() {
+    // Aquí debes implementar la lógica para borrar datos en Postman
+    // Puedes usar fetch() o cualquier otra biblioteca para realizar solicitudes HTTP
+    // Por ejemplo:
+    // fetch('tu_url_de_postman', {
+    //     method: 'DELETE',
+    // })
+    // .then(response => response.json())
+    // .then(data => console.log('Datos borrados en Postman:', data))
+    // .catch(error => console.error('Error al borrar datos en Postman:', error));
 }
