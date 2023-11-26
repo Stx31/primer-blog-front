@@ -1,38 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
 app.use(bodyParser.json());
 
-const savedData = [];
+let messages = [];
 
-app.post('/guardar', (req, res) => {
+app.post('/saveData', (req, res) => {
     const { author, title, message } = req.body;
-    const currentTime = new Date();
-    const formattedTime = `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`;
-
-    const data = {
-        author,
-        title,
-        message,
-        timestamp: formattedTime
-    };
-
-    savedData.push(data);
-    console.log('Datos guardados:', data);
-    res.status(201).json({ message: 'Datos guardados con éxito.' });
+    messages.push({ author, title, message });
+    res.status(200).json({ success: true, message: 'Mensaje guardado correctamente' });
 });
 
-app.get('/mostrarDatos', (req, res) => {
-    res.json(savedData);
+app.delete('/deleteData', (req, res) => {
+    messages = [];
+    res.status(200).json({ success: true, message: 'Datos borrados correctamente' });
 });
 
-app.delete('/borrar-datos', (req, res) => {
-    savedData.length = 0;
-    res.send('Datos borrados con éxito');
-});
-
-app.listen(port, () => {
-    console.log(`Servidor escuchando en http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
