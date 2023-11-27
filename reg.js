@@ -12,7 +12,7 @@ function saveData() {
 
         data.push({ author, title, message });
         displayData();
-        saveToServer(); // Add this line to save data to the server
+        saveToServer();
         document.getElementById('messageForm').reset();
     } catch (error) {
         console.error('Error saving data:', error.message);
