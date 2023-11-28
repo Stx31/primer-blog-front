@@ -1,64 +1,57 @@
-const data = [];
+let data = [];
 
 function saveData() {
-    try {
-        const author = document.getElementById('author').value;
-        const title = document.getElementById('title').value;
-        const message = document.getElementById('message').value;
+    const author = document.getElementById('author').value;
+    const title = document.getElementById('title').value;
+    const message = document.getElementById('message').value;
 
-        if (!author || !title || !message) {
-            throw new Error('Please fill out all fields.');
-        }
+    const newData = {
+        author: author,
+        title: title,
+        message: message
+    };
 
-        data.push({ author, title, message });
-        displayData();
-        saveToServer();
-        document.getElementById('messageForm').reset();
-    } catch (error) {
-        console.error('Error saving data:', error.message);
-    }
+    data.push(newData);
+    displayData();
+    clearForm();
+}
+
+function getData() {
+    
+    fetch('/obtener-datos')
+        .then(response => response.json())
+        .then(dataFromServer => {
+            data = dataFromServer;
+            displayData();
+        })
+        .catch(error => console.error('Error al obtener datos:', error));
 }
 
 function deleteData() {
-    try {
-        data.length = 0;
-        displayData();
-        deleteFromServer();
-    } catch (error) {
-        console.error('Error deleting data:', error.message);
-    }
+  
+    fetch('/borrar-datos', { method: 'DELETE' })
+        .then(response => response.json())
+        .then(responseData => {
+            console.log(responseData.mensaje);
+            data = [];
+            displayData();
+        })
+        .catch(error => console.error('Error al borrar datos:', error));
 }
 
 function displayData() {
-    const container = document.getElementById('dataContainer');
-    container.innerHTML = '';
+    const dataContainer = document.getElementById('dataContainer');
+    dataContainer.innerHTML = '';
 
-    data.forEach(({ author, title, message }) => {
-        const newItem = document.createElement('div');
-        newItem.textContent = `${author} - ${title} - ${message}`;
-        container.appendChild(newItem);
+    data.forEach((item, index) => {
+        const listItem = document.createElement('div');
+        listItem.innerHTML = `<strong>Autor:</strong> ${item.author} | <strong>Título:</strong> ${item.title} | <strong>Mensaje:</strong> ${item.message}`;
+        dataContainer.appendChild(listItem);
     });
 }
 
-async function saveToServer() {
-    try {
-        const { value: author } = document.getElementById('author');
-        const { value: title } = document.getElementById('title');
-        const { value: message } = document.getElementById('message');
-
-        const response = await axios.post('http://localhost:3000/saveData', { author, title, message });
-        console.log(response.data.message);
-    } catch (error) {
-        console.error('Error saving to the server:', error);
-    }
+function clearForm() {
+    document.getElementById('author').value = '';
+    document.getElementById('title').value = '';
+    document.getElementById('message').value = '';
 }
-
-async function deleteFromServer() {
-    try {
-        const response = await axios.delete('http://localhost:3000/deleteData');
-        console.log(response.data.message);
-    } catch (error) {
-        console.error('Error deleting from the server:', error);
-    }
-}
-

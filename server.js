@@ -4,27 +4,28 @@ const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
-const data = [];
+let data = [];
 
-app.post('/saveData', (req, res) => {
-    try {
-        const { author, title, message } = req.body;
+app.get('/obtener-datos', (req, res) => {
+   
+    res.json(data);
+});
 
-        if (!author || !title || !message) {
-            throw new Error('Invalid data. Please provide all fields.');
-        }
+app.post('/guardar-datos', (req, res) => {
+    const newData = req.body;
+    data.push(newData);
+    console.log('Datos guardados:', newData);
+    res.json({ mensaje: 'Datos guardados correctamente' });
+});
 
-        data.push({ author, title, message });
-        console.log('Data received:', { author, title, message });
-        res.json({ message: 'Data saved successfully!' });
-    } catch (error) {
-        console.error('Error saving data:', error.message);
-        res.status(400).json({ error: error.message });
-    }
+app.delete('/borrar-datos', (req, res) => {
+   
+    data = [];
+    console.log('Datos borrados');
+    res.json({ mensaje: 'Datos borrados correctamente' });
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Servidor escuchando en http://localhost:${port}`);
 });
