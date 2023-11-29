@@ -1,57 +1,94 @@
-let data = [];
+document.addEventListener('DOMContentLoaded', function () {
+    loadData();
 
-function saveData() {
+    document.getElementById('messageForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+    });
+
+    document.getElementById('saveButton').addEventListener('click', function () {
+        saveDataAndRedirect();
+    });
+
+    document.getElementById('deleteButton').addEventListener('click', function () {
+        deleteData();
+    });
+});
+
+function saveDataAndRedirect() {
     const author = document.getElementById('author').value;
     const title = document.getElementById('title').value;
     const message = document.getElementById('message').value;
 
-    const newData = {
-        author: author,
-        title: title,
-        message: message
-    };
-
-    data.push(newData);
-    displayData();
-    clearForm();
-}
-
-function getData() {
-    
-    fetch('/obtener-datos')
+    fetch('http://localhost:3000/guardarMensaje', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author, title, message }),
+    })
         .then(response => response.json())
-        .then(dataFromServer => {
-            data = dataFromServer;
-            displayData();
+        .then(data => {
+            console.log(data);
+            loadData();
+            redirectToIndex();
         })
-        .catch(error => console.error('Error al obtener datos:', error));
+        .catch(error => console.error('Error:', error));
 }
 
 function deleteData() {
   
-    fetch('/borrar-datos', { method: 'DELETE' })
+    const deleteButton = document.createElement('button');
+deleteButton.textContent = 'Borrar';
+deleteButton.id = 'deleteButton'; // Asignar un id al botón
+
+deleteButton.addEventListener('click', function () {
+    deleteMessageOnServer(message);
+    messageDiv.remove(); 
+});
+}
+
+function deleteMessageOnServer(message) {
+   
+    fetch('http://localhost:3000/eliminarMensaje', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+    })
         .then(response => response.json())
-        .then(responseData => {
-            console.log(responseData.mensaje);
-            data = [];
-            displayData();
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+}
+
+function loadData() {
+    fetch('http://localhost:3000/obtenerMensajes')
+        .then(response => response.json())
+        .then(data => {
+            const dataContainer = document.getElementById('dataContainer');
+            dataContainer.innerHTML = '';
+
+            data.mensajes.forEach(({ author, title, message }) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p>`;
+                
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Borrar';
+                deleteButton.addEventListener('click', function () {
+                    deleteMessageOnServer(message);
+                    messageDiv.remove(); 
+                });
+                
+                messageDiv.appendChild(deleteButton);
+                
+                dataContainer.appendChild(messageDiv);
+            });
         })
-        .catch(error => console.error('Error al borrar datos:', error));
+        .catch(error => console.error('Error:', error));
 }
 
-function displayData() {
-    const dataContainer = document.getElementById('dataContainer');
-    dataContainer.innerHTML = '';
-
-    data.forEach((item, index) => {
-        const listItem = document.createElement('div');
-        listItem.innerHTML = `<strong>Autor:</strong> ${item.author} | <strong>Título:</strong> ${item.title} | <strong>Mensaje:</strong> ${item.message}`;
-        dataContainer.appendChild(listItem);
-    });
-}
-
-function clearForm() {
-    document.getElementById('author').value = '';
-    document.getElementById('title').value = '';
-    document.getElementById('message').value = '';
+function redirectToIndex() {
+    window.location.href = 'index.html';
 }

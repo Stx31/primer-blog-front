@@ -1,103 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario</title>
-    <link rel="stylesheet" href="style.reg.css">
+    <title>Guardar Mensaje</title>
 </head>
-
 <body>
-    <div class="container">
-        <div class="caja">
-            <div class="titulo">
-                <h3>Ingresa los datos</h3>
-            </div>
-            <hr>
-            <form id="messageForm">
-                <input type="text" id="author" placeholder="Autor" required>
-                <input type="text" id="title" placeholder="Título" required>
-                <textarea id="message" placeholder="Mensaje" required></textarea>
-                <button type="button" onclick="saveData()">Guardar Mensaje</button>
-                <button type="button" onclick="deleteData()">Borrar Datos</button>
-            </form>
-        </div>
-    </div>
+    <h1>Guardar Mensaje</h1>
+    <input type="text" id="mensajeInput" placeholder="Escribe tu mensaje">
+    <button onclick="guardarMensaje()">Guardar</button>
 
-    <div id="dataContainer"></div>
-
-    <script src="reg.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
-        function saveData() {
-            const author = $('#author').val();
-            const title = $('#title').val();
-            const message = $('#message').val();
-
-            $.ajax({
-                url: 'http://localhost:3000/guardar-datos',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ author, title, message }),
-                success: function (response) {
-                    console.log(response);
-                    getData();
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
-        }
-
-        function deleteData() {
-            $.ajax({
-                url: 'http://localhost:3000/borrar-datos',
-                type: 'DELETE',
-                success: function (response) {
-                    console.log(response);
-                    getData();
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
-        }
-
-        function getData() {
-            $.ajax({
-                url: 'http://localhost:3000/obtener-datos',
-                type: 'GET',
-                success: function (data) {
-                    displayData(data);
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
-        }
-
-        function displayData(data) {
-            const dataContainer = $('#dataContainer');
-            dataContainer.empty();
-
-            if (data.length > 0) {
-                dataContainer.append('<h2>Datos almacenados:</h2>');
-                dataContainer.append('<ul>');
-
-                data.forEach(item => {
-                    dataContainer.append(`<li>${item.author} - ${item.title} - ${item.message}</li>`);
-                });
-
-                dataContainer.append('</ul>');
-            } else {
-                dataContainer.append('<h2>No hay datos almacenados.</h2>');
-            }
-        }
+        function guardarMensaje() {
+            const mensaje = document.getElementById('mensajeInput').value;
 
         
-        getData();
+            localStorage.setItem('mensajeGuardado', mensaje);
+
+            
+            fetch('http://localhost:3000/guardarMensaje', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ mensaje }),
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
     </script>
 </body>
-
 </html>
+

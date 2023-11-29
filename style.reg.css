@@ -59,3 +59,10 @@ button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
+#dltbtn{
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
