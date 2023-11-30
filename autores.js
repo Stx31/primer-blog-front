@@ -1,49 +1,21 @@
+document.addEventListener('DOMContentLoaded', function () {
+    loadAuthors();
+});
 
-var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
+function loadAuthors() {
+    fetch('http://localhost:3000/obtenerAutores')
+        .then(response => response.json())
+        .then(data => {
+            const autoresContainer = document.getElementById('autores');
+            autoresContainer.innerHTML = '';
 
-function mostrarMensajes() {
-    var mensajesDiv = document.getElementById("mensajes");
-    mensajesDiv.innerHTML = "";
+            data.autores.forEach(author => {
+                const authorDiv = document.createElement('div');
+                authorDiv.classList.add('author');
+                authorDiv.innerHTML = `<p>${author}</p>`;
 
-    if (userDataArray.length > 0) {
-        userDataArray.forEach(function (userData, index) {
-            var mensajeHTML = `
-                <div class="caja">
-                    <p>${userData.email || ""}</p>
-                    <button class="btn-borrar" data-index="${index}">Borrar</button>
-                </div>`;
-            mensajesDiv.innerHTML += mensajeHTML;
-        });
-
-     
-        var botonesBorrar = document.querySelectorAll(".btn-borrar");
-        botonesBorrar.forEach(function (boton) {
-            boton.addEventListener("click", function () {
-                var index = boton.getAttribute("data-index");
-                borrarMensaje(index);
+                autoresContainer.appendChild(authorDiv);
             });
-        });
-    } else {
-        mensajesDiv.innerHTML =`<p class="nhc">No hay datos</p>`;
-    }
+        })
+        .catch(error => console.error('Error:', error));
 }
-
-
-function borrarMensaje(index) {
-    userDataArray.splice(index, 1);
-    localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    mostrarMensajes();
-}
-
-mostrarMensajes();
-const autoresElement = document.getElementById('autores');
-
-fetch('http://localhost:3000/autores')
-  .then(response => response.json())
-  .then(data => {
-    autoresElement.innerHTML = '<h2>Autores</h2><ul>' + data.map(autor => `<li>${autor}</li>`).join('') + '</ul>';
-  })
-  .catch(error => {
-    console.error(error);
-    autoresElement.innerHTML = '<p>Error al obtener los autores.</p>';
-  });

@@ -38,3 +38,9 @@
     font-size: 25px;
     text-align: center;
   }      
+
+  .author {
+    border: 1px solid #ddd;
+    margin: 10px;
+    padding: 10px;
+}

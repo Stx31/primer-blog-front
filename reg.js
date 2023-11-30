@@ -18,13 +18,16 @@ function saveDataAndRedirect() {
     const author = document.getElementById('author').value;
     const title = document.getElementById('title').value;
     const message = document.getElementById('message').value;
+    
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
 
     fetch('http://localhost:3000/guardarMensaje', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ author, title, message }),
+        body: JSON.stringify({ author, title, message, timestamp: formattedDate }),
     })
         .then(response => response.json())
         .then(data => {
@@ -36,29 +39,7 @@ function saveDataAndRedirect() {
 }
 
 function deleteData() {
-  
-    const deleteButton = document.createElement('button');
-deleteButton.textContent = 'Borrar';
-deleteButton.id = 'deleteButton'; // Asignar un id al botón
-
-deleteButton.addEventListener('click', function () {
-    deleteMessageOnServer(message);
-    messageDiv.remove(); 
-});
-}
-
-function deleteMessageOnServer(message) {
    
-    fetch('http://localhost:3000/eliminarMensaje', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),
-    })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
 }
 
 function loadData() {
@@ -68,24 +49,62 @@ function loadData() {
             const dataContainer = document.getElementById('dataContainer');
             dataContainer.innerHTML = '';
 
-            data.mensajes.forEach(({ author, title, message }) => {
+            data.mensajes.forEach(({ author, title, message, timestamp }) => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message');
-                messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p>`;
-                
-                
+                messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p><p>Fecha y hora: ${timestamp}</p>`;
+
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Editar';
+                editButton.addEventListener('click', function () {
+                    editMessage(message, messageDiv);
+                });
+
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Borrar';
                 deleteButton.addEventListener('click', function () {
                     deleteMessageOnServer(message);
                     messageDiv.remove(); 
                 });
-                
+
+                messageDiv.appendChild(editButton);
                 messageDiv.appendChild(deleteButton);
-                
+
                 dataContainer.appendChild(messageDiv);
             });
         })
+        .catch(error => console.error('Error:', error));
+}
+
+function editMessage(originalMessage, messageDiv) {
+    const editForm = document.createElement('form');
+    const editInput = document.createElement('textarea');
+    editInput.value = originalMessage;
+    const saveEditButton = document.createElement('button');
+    saveEditButton.textContent = 'Guardar Edición';
+
+    saveEditButton.addEventListener('click', function () {
+        const editedMessage = editInput.value;
+        saveEditedMessage(originalMessage, editedMessage);
+        messageDiv.querySelector('p').textContent = editedMessage;
+        editForm.remove();
+    });
+
+    editForm.appendChild(editInput);
+    editForm.appendChild(saveEditButton);
+    messageDiv.appendChild(editForm);
+}
+
+function saveEditedMessage(originalMessage, editedMessage) {
+    fetch('http://localhost:3000/editarMensaje', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ originalMessage, editedMessage }),
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
 }
 
