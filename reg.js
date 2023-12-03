@@ -18,7 +18,7 @@ function saveDataAndRedirect() {
     const author = document.getElementById('author').value;
     const title = document.getElementById('title').value;
     const message = document.getElementById('message').value;
-    
+
     const currentDate = new Date();
     const formattedDate = `${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
 
@@ -54,14 +54,12 @@ function loadData() {
                 messageDiv.classList.add('message');
                 messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p><p>Fecha y hora: ${timestamp}</p>`;
 
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Editar';
+                const editButton = createStyledButton('Editar', 'green'); 
                 editButton.addEventListener('click', function () {
                     editMessage(message, messageDiv);
                 });
 
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Borrar';
+                const deleteButton = createStyledButton('Borrar', 'red'); 
                 deleteButton.addEventListener('click', function () {
                     deleteMessageOnServer(message);
                     messageDiv.remove(); 
@@ -110,4 +108,14 @@ function saveEditedMessage(originalMessage, editedMessage) {
 
 function redirectToIndex() {
     window.location.href = 'index.html';
+}
+
+function createStyledButton(text, color) {
+    const button = document.createElement('button');
+    button.textContent = text;
+    button.style.backgroundColor = color; 
+    button.style.color = 'white'; 
+    button.style.marginRight = '5px'; 
+
+    return button;
 }
