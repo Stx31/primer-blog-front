@@ -1,51 +1,53 @@
-document.addEventListener('DOMContentLoaded', function () {
-    loadAuthors();
-});
 
-function loadAuthors() {
-    fetch('http://localhost:3000/obtenerMensajes')
-        .then(response => response.json())
-        .then(data => {
-            const authorsContainer = document.getElementById('authorsContainer');
-            authorsContainer.innerHTML = '<h2>Autores:</h2>';
+        document.addEventListener('DOMContentLoaded', function () {
+            loadAuthors();
+        });
 
-            const authorsSet = new Set();
+        function loadAuthors() {
+            fetch('http://localhost:3000/obtenerMensajes')
+                .then(response => response.json())
+                .then(data => {
+                    const authorsContainer = document.getElementById('authorsContainer');
 
-            data.mensajes.forEach(({ author }) => {
-                authorsSet.add(author);
-            });
+                    const authorsSet = new Set();
 
-            authorsSet.forEach(author => {
-                const authorBox = document.createElement('div');
-                authorBox.classList.add('author-box');
+                    data.mensajes.forEach(({ author }) => {
+                        authorsSet.add(author);
+                    });
 
-                const authorItem = document.createElement('span');
-                authorItem.textContent = author;
+                    authorsSet.forEach(author => {
+                        const authorBox = document.createElement('div');
+                        authorBox.classList.add('author-box');
 
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Borrar';
-                deleteButton.addEventListener('click', function () {
-                    deleteAuthor(author);
-                    authorBox.remove();
-                });
+                        const authorItem = document.createElement('span');
+                        authorItem.classList.add('author-name');
+                        authorItem.textContent = author;
 
-                authorBox.appendChild(authorItem);
-                authorBox.appendChild(deleteButton);
-                authorsContainer.appendChild(authorBox);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-}
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Borrar';
+                        deleteButton.classList.add('delete-button');
+                        deleteButton.addEventListener('click', function () {
+                            deleteAuthor(author);
+                            authorBox.remove();
+                        });
 
-function deleteAuthor(author) {
-    fetch('http://localhost:3000/borrarAutor', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ author }),
-    })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
-}
+                        authorBox.appendChild(authorItem);
+                        authorBox.appendChild(deleteButton);
+                        authorsContainer.appendChild(authorBox);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function deleteAuthor(author) {
+            fetch('http://localhost:3000/borrarAutor', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ author }),
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        }
