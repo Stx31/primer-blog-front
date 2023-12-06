@@ -8,32 +8,34 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-let mensajesGuardados = [];
+let postsGuardados = [];
 
-app.post('/guardarMensaje', (req, res) => {
+app.post('/guardarPost', (req, res) => {
     const { author, title, message, timestamp } = req.body;
-    mensajesGuardados.push({ author, title, message, timestamp });
-    res.json({ status: 'Mensaje guardado correctamente' });
+    postsGuardados.push({ author, title, message, timestamp });
+    res.json({ status: 'Post guardado correctamente' });
 });
 
-app.get('/obtenerMensajes', (req, res) => {
-    res.json({ mensajes: mensajesGuardados });
+app.get('/obtenerPosts', (req, res) => {
+    res.json({ posts: postsGuardados });
 });
 
-app.delete('/eliminarMensaje', (req, res) => {
-    const mensajeAEliminar = req.body.message;
-    mensajesGuardados = mensajesGuardados.filter(mensaje => mensaje.message !== mensajeAEliminar);
-    res.json({ status: 'Mensaje eliminado correctamente' });
+
+
+app.delete('/eliminarAutor', (req, res) => {
+    const authorToDelete = req.body.author;
+    postsGuardados = postsGuardados.filter(post => post.author !== authorToDelete);
+    res.json({ status: 'Autor y mensajes eliminados correctamente' });
 });
 
-app.put('/editarMensaje', (req, res) => {
+app.put('/editarPost', (req, res) => {
     const { originalMessage, editedMessage } = req.body;
-    const mensajeAEditar = mensajesGuardados.find(mensaje => mensaje.message === originalMessage);
-    if (mensajeAEditar) {
-        mensajeAEditar.message = editedMessage;
-        res.json({ status: 'Mensaje editado correctamente' });
+    const postAEditar = postsGuardados.find(post => post.message === originalMessage);
+    if (postAEditar) {
+        postAEditar.message = editedMessage;
+        res.json({ status: 'Post editado correctamente' }); 
     } else {
-        res.status(404).json({ status: 'Mensaje no encontrado' });
+        res.status(404).json({ status: 'Post no encontrado' });
     }
 });
 

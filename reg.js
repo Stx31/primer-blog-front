@@ -1,121 +1,130 @@
 document.addEventListener('DOMContentLoaded', function () {
-    loadData();
-
-    document.getElementById('messageForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-    });
-
-    document.getElementById('saveButton').addEventListener('click', function () {
-        saveDataAndRedirect();
-    });
-
-    document.getElementById('deleteButton').addEventListener('click', function () {
-        deleteData();
-    });
+    loadMessages();
 });
 
-function saveDataAndRedirect() {
+function savePost() {
     const author = document.getElementById('author').value;
     const title = document.getElementById('title').value;
     const message = document.getElementById('message').value;
 
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
-
-    fetch('http://localhost:3000/guardarMensaje', {
+    fetch('http://localhost:3000/guardarPost', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ author, title, message, timestamp: formattedDate }),
+        body: JSON.stringify({ author, title, message }),
     })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            loadData();
-            redirectToIndex();
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        
+        window.location.href = 'index.html';
+    })
+    .catch(error => handleError(error, 'Error al guardar el mensaje'));
+}
+
+function loadMessages() {
+    fetch('http://localhost:3000/obtenerPosts')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error de red - ${response.status}`);
+            }
+            return response.json();
         })
-        .catch(error => console.error('Error:', error));
-}
-
-function deleteData() {
-   
-}
-
-function loadData() {
-    fetch('http://localhost:3000/obtenerMensajes')
-        .then(response => response.json())
         .then(data => {
-            const dataContainer = document.getElementById('dataContainer');
-            dataContainer.innerHTML = '';
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '';
 
-            data.mensajes.forEach(({ author, title, message, timestamp }) => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message');
-                messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p><p>Fecha y hora: ${timestamp}</p>`;
-
-                const editButton = createStyledButton('Editar', 'green'); 
-                editButton.addEventListener('click', function () {
-                    editMessage(message, messageDiv);
-                });
-
-                const deleteButton = createStyledButton('Borrar', 'red'); 
-                deleteButton.addEventListener('click', function () {
-                    deleteMessageOnServer(message);
-                    messageDiv.remove(); 
-                });
-
-                messageDiv.appendChild(editButton);
-                messageDiv.appendChild(deleteButton);
-
-                dataContainer.appendChild(messageDiv);
+            data.posts.forEach(({ author, title, message }) => {
+                const messageDiv = createMessageDiv(title, author, message);
+                messagesContainer.appendChild(messageDiv);
             });
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => handleError(error, 'Error al cargar los mensajes'));
 }
 
-function editMessage(originalMessage, messageDiv) {
-    const editForm = document.createElement('form');
-    const editInput = document.createElement('textarea');
-    editInput.value = originalMessage;
-    const saveEditButton = document.createElement('button');
-    saveEditButton.textContent = 'Guardar Edición';
+function createMessageDiv(title, author, message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p>`;
 
-    saveEditButton.addEventListener('click', function () {
-        const editedMessage = editInput.value;
-        saveEditedMessage(originalMessage, editedMessage);
-        messageDiv.querySelector('p').textContent = editedMessage;
-        editForm.remove();
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Borrar';
+    deleteButton.classList.add('delete-button');
+    deleteButton.addEventListener('click', function () {
+        deleteMessage(author, title, message); 
+        messageDiv.remove(); 
     });
 
-    editForm.appendChild(editInput);
-    editForm.appendChild(saveEditButton);
-    messageDiv.appendChild(editForm);
+    messageDiv.appendChild(deleteButton);
+    return messageDiv;
 }
 
-function saveEditedMessage(originalMessage, editedMessage) {
-    fetch('http://localhost:3000/editarMensaje', {
-        method: 'PUT',
+function deleteMessage(author, title, message) {
+    fetch('http://localhost:3000/eliminarPost', {
+        method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ originalMessage, editedMessage }),
+        body: JSON.stringify({ author, title, message }),
     })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => handleError(error, 'Error al borrar el mensaje'));
+}
+
+
+function loadAuthors() {
+    fetch('http://localhost:3000/obtenerPosts')
         .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+        .then(data => {
+            const authorsContainer = document.getElementById('authorsContainer');
+            authorsContainer.innerHTML = '';
+
+            const authorsArray = [];
+
+            data.posts.forEach(post => {
+                const author = post.author;
+                if (!authorsArray.includes(author)) {
+                    authorsArray.push(author);
+
+                    const authorBox = document.createElement('div');
+                    authorBox.classList.add('author-box');
+
+                    const authorItem = document.createElement('span');
+                    authorItem.classList.add('author-name');
+                    authorItem.textContent = author;
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Borrar';
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.addEventListener('click', function () {
+                        deleteAuthor(author);
+                        authorBox.remove();
+                    });
+
+                    authorBox.appendChild(authorItem);
+                    authorBox.appendChild(deleteButton);
+                    authorsContainer.appendChild(authorBox);
+                }
+            });
+        })
+        .catch(error => handleError(error, 'Error al cargar los autores'));
 }
-
-function redirectToIndex() {
-    window.location.href = 'index.html';
-}
-
-function createStyledButton(text, color) {
-    const button = document.createElement('button');
-    button.textContent = text;
-    button.style.backgroundColor = color; 
-    button.style.color = 'white'; 
-    button.style.marginRight = '5px'; 
-
-    return button;
+function deleteAuthor(author) {
+    fetch('http://localhost:3000/eliminarAutor', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        loadAuthors();  
+    })
+    .catch(error => handleError(error, 'Error al borrar el autor'));
 }
