@@ -15,6 +15,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 300px;
+    text-align: center; /* Centra el texto dentro de la caja */
 }
 
 .caja {
@@ -44,7 +45,6 @@ button {
     background-color: #4caf50;
     color: #fff;
     cursor: pointer;
- 
 }
 
 button:hover {
@@ -59,10 +59,15 @@ button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
-#dltbtn{
+
+#dltbtn {
     background-color: red;
     border: none;
     color: white;
     padding: 5px 10px;
     cursor: pointer;
+}
+
+#dltbtn:hover {
+    background-color: darkred;
 }
