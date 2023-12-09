@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadAuthors(); 
 });
 
-function deleteAuthor(author) {
+function deleteAuthor(author, authorBox) {
     fetch('http://localhost:3000/eliminarAutor', {
         method: 'DELETE',
         headers: {
@@ -13,8 +13,8 @@ function deleteAuthor(author) {
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        loadAuthors();
-        loadMessages();  
+        authorBox.remove();
+        loadMessages();
     })
     .catch(error => handleError(error, 'Error al borrar el autor'));
 }
@@ -44,7 +44,7 @@ function loadAuthors() {
                     deleteButton.textContent = 'Borrar';
                     deleteButton.classList.add('delete-button');
                     deleteButton.addEventListener('click', function () {
-                        deleteAuthor(author);
+                        deleteAuthor(author, authorBox);
                     });
 
                     authorBox.appendChild(authorItem);
@@ -71,30 +71,15 @@ function loadMessages() {
         .catch(error => handleError(error, 'Error al cargar los mensajes'));
 }
 
-function createMessageDiv(title, author, message) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p>`;
 
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Borrar';
-    deleteButton.classList.add('delete-button');
-    deleteButton.addEventListener('click', function () {
-        deleteMessage(author, title, message);
-        messageDiv.remove();
-    });
 
-    messageDiv.appendChild(deleteButton);
-    return messageDiv;
-}
-
-function deleteMessage(author, title, message) {
+function deleteMessage(author) {
     fetch('http://localhost:3000/eliminarPost', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ author, title, message }),
+        body: JSON.stringify({ author }),
     })
     .then(response => response.json())
     .then(data => {

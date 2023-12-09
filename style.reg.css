@@ -15,7 +15,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 300px;
-    text-align: center; /* Centra el texto dentro de la caja */
+    text-align: center; 
 }
 
 .caja {
@@ -42,7 +42,7 @@ button {
 }
 
 button {
-    background-color: #4caf50;
+    background-color: #4285f4;
     color: #fff;
     cursor: pointer;
 }
