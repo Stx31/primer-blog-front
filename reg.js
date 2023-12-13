@@ -1,6 +1,7 @@
+const authorsArray = [];
+
 document.addEventListener('DOMContentLoaded', function () {
     loadMessages();
-    // Agregado: Llama a la función loadAuthors al cargar la página
     loadAuthors();
 });
 
@@ -10,9 +11,10 @@ function savePost() {
     const message = document.getElementById('message').value;
 
     const currentDate = new Date();
-    const formattedDateTime = `${getDayName(currentDate)} ${currentDate.getDate()} de ${getMonthName(currentDate)} a las ${formatTime(currentDate)}`;
+    const formattedDateTime = formatTime(currentDate);
 
-    // Agregado: Actualiza el elemento en el HTML con la fecha y la hora actual
+    authorsArray.push({ author, dateTime: formattedDateTime });
+
     updateCurrentDateTime(formattedDateTime);
 
     fetch('http://localhost:3000/guardarPost', {
@@ -25,19 +27,10 @@ function savePost() {
     .then(response => response.json())
     .then(data => {
         console.log(data);
+        loadAuthors();
         window.location.href = 'index.html';
     })
     .catch(error => handleError(error, 'Error al guardar el mensaje'));
-}
-
-function getDayName(date) {
-    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    return days[date.getDay()];
-}
-
-function getMonthName(date) {
-    const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-    return months[date.getMonth()];
 }
 
 function formatTime(date) {
@@ -69,7 +62,13 @@ function loadMessages() {
 function createMessageDiv(title, author, message, dateTime) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
-    messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p><p>${dateTime}</p>`;
+    messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p>`;
+
+    if (dateTime) {
+        const dateTimeParagraph = document.createElement('p');
+        dateTimeParagraph.textContent = `Hora: ${dateTime}`;
+        messageDiv.appendChild(dateTimeParagraph);
+    }
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Borrar';
@@ -105,20 +104,22 @@ function loadAuthors() {
             const authorsContainer = document.getElementById('authorsContainer');
             authorsContainer.innerHTML = '';
 
-            const authorsArray = [];
-
             data.posts.forEach(post => {
                 const author = post.author;
-                const dateTime = post.dateTime; // Agregado: Obtener la fecha y la hora del mensaje
+                const message = post.message;
+                const dateTime = post.dateTime; 
                 if (!authorsArray.some(item => item.author === author)) {
-                    authorsArray.push({ author, dateTime });
+                    authorsArray.push({ author, message, dateTime });
 
                     const authorBox = document.createElement('div');
                     authorBox.classList.add('author-box');
 
                     const authorItem = document.createElement('span');
                     authorItem.classList.add('author-name');
-                    authorItem.textContent = `${author} - ${dateTime}`; // Modificado: Mostrar la fecha y la hora
+                    authorItem.textContent = `${author} - ${dateTime || 'No disponible'}`; 
+
+                    const messageItem = document.createElement('p');
+                    messageItem.textContent = `Mensaje: ${message || 'No disponible'}`;
 
                     const deleteButton = document.createElement('button');
                     deleteButton.textContent = 'Borrar';
@@ -129,6 +130,7 @@ function loadAuthors() {
                     });
 
                     authorBox.appendChild(authorItem);
+                    authorBox.appendChild(messageItem);
                     authorBox.appendChild(deleteButton);
                     authorsContainer.appendChild(authorBox);
                 }
@@ -153,7 +155,6 @@ function deleteAuthor(author) {
     .catch(error => handleError(error, 'Error al borrar el autor'));
 }
 
-// Agregado: Función para actualizar el elemento en el HTML con la fecha y la hora actual
 function updateCurrentDateTime(formattedDateTime) {
     const currentDateTimeElement = document.getElementById('currentDateTime');
     if (currentDateTimeElement) {
