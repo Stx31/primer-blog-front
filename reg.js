@@ -53,7 +53,8 @@ function loadMessages() {
 
             data.posts.forEach(({ author, title, message, dateTime }) => {
                 const messageDiv = createMessageDiv(title, author, message, dateTime);
-                messagesContainer.appendChild(messageDiv);
+                messagesContainer.appendChild(messageDiv); 
+                
             });
         })
         .catch(error => handleError(error, 'Error al cargar los mensajes'));
