@@ -17,7 +17,7 @@ function savePost() {
 
     updateCurrentDateTime(formattedDateTime);
 
-    fetch('http://localhost:3000/guardarPost', {
+    fetch('http://localhost:4000/guardarPost', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ function formatTime(date) {
 }
 
 function loadMessages() {
-    fetch('http://localhost:3000/obtenerPosts')
+    fetch('http://localhost:4000/obtenerPosts')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Error de red - ${response.status}`);
@@ -53,8 +53,7 @@ function loadMessages() {
 
             data.posts.forEach(({ author, title, message, dateTime }) => {
                 const messageDiv = createMessageDiv(title, author, message, dateTime);
-                messagesContainer.appendChild(messageDiv); 
-                
+                messagesContainer.appendChild(messageDiv);
             });
         })
         .catch(error => handleError(error, 'Error al cargar los mensajes'));
@@ -84,7 +83,7 @@ function createMessageDiv(title, author, message, dateTime) {
 }
 
 function deleteMessage(author, title, message) {
-    fetch('http://localhost:3000/eliminarPost', {
+    fetch('http://localhost:4000/eliminarPost', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -99,49 +98,42 @@ function deleteMessage(author, title, message) {
 }
 
 function loadAuthors() {
-    fetch('http://localhost:3000/obtenerPosts')
+    fetch('http://localhost:4000/obtenerAutores')
         .then(response => response.json())
         .then(data => {
             const authorsContainer = document.getElementById('authorsContainer');
             authorsContainer.innerHTML = '';
 
-            data.posts.forEach(post => {
-                const author = post.author;
-                const message = post.message;
-                const dateTime = post.dateTime; 
-                if (!authorsArray.some(item => item.author === author)) {
-                    authorsArray.push({ author, message, dateTime });
+            data.autores.forEach(({ author, message, dateTime }) => {
+                const authorBox = document.createElement('div');
+                authorBox.classList.add('author-box');
 
-                    const authorBox = document.createElement('div');
-                    authorBox.classList.add('author-box');
+                const authorItem = document.createElement('span');
+                authorItem.classList.add('author-name');
+                authorItem.textContent = `${author} - ${dateTime || 'No disponible'}`;
 
-                    const authorItem = document.createElement('span');
-                    authorItem.classList.add('author-name');
-                    authorItem.textContent = `${author} - ${dateTime || 'No disponible'}`; 
+                const messageItem = document.createElement('p');
+                messageItem.textContent = `Mensaje: ${message || 'No disponible'}`;
 
-                    const messageItem = document.createElement('p');
-                    messageItem.textContent = `Mensaje: ${message || 'No disponible'}`;
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Borrar';
+                deleteButton.classList.add('delete-button');
+                deleteButton.addEventListener('click', function () {
+                    deleteAuthor(author);
+                    authorBox.remove();
+                });
 
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Borrar';
-                    deleteButton.classList.add('delete-button');
-                    deleteButton.addEventListener('click', function () {
-                        deleteAuthor(author);
-                        authorBox.remove();
-                    });
-
-                    authorBox.appendChild(authorItem);
-                    authorBox.appendChild(messageItem);
-                    authorBox.appendChild(deleteButton);
-                    authorsContainer.appendChild(authorBox);
-                }
+                authorBox.appendChild(authorItem);
+                authorBox.appendChild(messageItem);
+                authorBox.appendChild(deleteButton);
+                authorsContainer.appendChild(authorBox);
             });
         })
         .catch(error => handleError(error, 'Error al cargar los autores'));
 }
 
 function deleteAuthor(author) {
-    fetch('http://localhost:3000/eliminarAutor', {
+    fetch('http://localhost:4000/eliminarAutor', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -152,13 +144,4 @@ function deleteAuthor(author) {
     .then(data => {
         console.log(data);
         loadAuthors();
-    })
-    .catch(error => handleError(error, 'Error al borrar el autor'));
-}
-
-function updateCurrentDateTime(formattedDateTime) {
-    const currentDateTimeElement = document.getElementById('currentDateTime');
-    if (currentDateTimeElement) {
-        currentDateTimeElement.textContent = formattedDateTime;
-    }
-}
+    })}
