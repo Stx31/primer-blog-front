@@ -1,96 +1,147 @@
-var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
-var mensajesDiv = document.getElementById("mensajes");
-var formularioContacto = document.getElementById("formularioContacto");
+const authorsArray = [];
 
-formularioContacto.addEventListener("submit", function (e) {
-    e.preventDefault();
-    guardarDatos();
+document.addEventListener('DOMContentLoaded', function () {
+    loadMessages();
+    loadAuthors();
 });
 
-var cancelarBoton = document.getElementById("cancelar");
-cancelarBoton.addEventListener("click", function () {
-    borrarDatosIngresadosYRedirigir();
-});
+function savePost() {
+    const author = document.getElementById('author').value;
+    const title = document.getElementById('title').value;
+    const message = document.getElementById('message').value;
 
-function borrarDatosIngresadosYRedirigir() {
-    document.getElementById("emailInput").value = "";
-    document.getElementById("nameInput").value = "";
-    document.getElementById("messageInput").value = "";
-   
+    const currentDate = new Date();
+    const formattedDateTime = formatTime(currentDate);
+
+    authorsArray.push({ author, dateTime: formattedDateTime });
+
+    updateCurrentDateTime(formattedDateTime);
+
+    fetch('http://localhost:4000/guardarPost', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author, title, message, dateTime: formattedDateTime }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        loadAuthors();
+        window.location.href = 'index.html';
+    })
+    .catch(error => handleError(error, 'Error al guardar el mensaje'));
 }
 
-function mostrarMensajes() {
-    mensajesDiv.innerHTML = "";
-    userDataArray.forEach(function (userData, index) {
-        var fechaFormateada = formatearFecha(new Date(userData.fecha));
-        var mensajeHTML = `
-            <div class="caja">
-                <p>${userData.email || ""}
-                <br>${userData.name || ""}
-                <br>${userData.message || ""}
-                <br>${fechaFormateada || ""}
-                <button class="btn2" data-index="${index}">Borrar</button>
-                </p>
-            </div>`;
-        mensajesDiv.innerHTML += mensajeHTML;
+function formatTime(date) {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+}
+
+function loadMessages() {
+    fetch('http://localhost:4000/obtenerPosts')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error de red - ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '';
+
+            data.posts.forEach(({ author, title, message, dateTime }) => {
+                const messageDiv = createMessageDiv(title, author, message, dateTime);
+                messagesContainer.appendChild(messageDiv);
+            });
+        })
+        .catch(error => handleError(error, 'Error al cargar los mensajes'));
+}
+
+function createMessageDiv(title, author, message, dateTime) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p>`;
+
+    if (dateTime) {
+        const dateTimeParagraph = document.createElement('p');
+        dateTimeParagraph.textContent = `Hora: ${dateTime}`;
+        messageDiv.appendChild(dateTimeParagraph);
+    }
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Borrar';
+    deleteButton.classList.add('delete-button');
+    deleteButton.addEventListener('click', function () {
+        deleteMessage(author, title, message);
+        messageDiv.remove();
     });
-}
-var guardarMensajeBoton = document.getElementById("guardarMensaje");
-guardarMensajeBoton.addEventListener("click", function () {
-   
-    window.location.href = 'index.html';
-});
 
-function formatearFecha(fecha) {
-    var mes = fecha.toLocaleString('default', { month: 'long' });
-    var dia = fecha.getDate();
-    var año = fecha.getFullYear();
-    var hora = fecha.getHours();
-    var minutos = fecha.getMinutes();
-    return `${mes} ${dia} ${año} - ${hora}:${minutos}`;
+    messageDiv.appendChild(deleteButton);
+    return messageDiv;
 }
 
-function guardarDatos() {
-    var email = document.getElementById("emailInput").value;
-    var name = document.getElementById("nameInput").value;
-    var message = document.getElementById("messageInput").value;
-
-    if (!email || !name || !message) {
-        alert("Por favor, complete todos los campos.");
-        return;
-    }
-
-    var fechaActual = new Date();
-    var fechaFormateada = formatearFecha(fechaActual);
-
-    var nuevoDato = {
-        email: email,
-        name: name,
-        message: message,
-        fecha: fechaFormateada
-    };
-
-    userDataArray.push(nuevoDato);
-
-    localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    mostrarMensajes();
-
-    document.getElementById("emailInput").value = "";
-    document.getElementById("nameInput").value = "";
-    document.getElementById("messageInput").value = "";
+function deleteMessage(author, title, message) {
+    fetch('http://localhost:4000/eliminarPost', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author, title, message }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => handleError(error, 'Error al borrar el mensaje'));
 }
 
-function borrarMensaje(index) {
-    userDataArray.splice(index, 1);
-    localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    mostrarMensajes();
+function loadAuthors() {
+    fetch('http://localhost:4000/obtenerAutores')
+        .then(response => response.json())
+        .then(data => {
+            const authorsContainer = document.getElementById('authorsContainer');
+            authorsContainer.innerHTML = '';
+
+            data.autores.forEach(({ author, message, dateTime }) => {
+                const authorBox = document.createElement('div');
+                authorBox.classList.add('author-box');
+
+                const authorItem = document.createElement('span');
+                authorItem.classList.add('author-name');
+                authorItem.textContent = `${author} - ${dateTime || 'No disponible'}`;
+
+                const messageItem = document.createElement('p');
+                messageItem.textContent = `Mensaje: ${message || 'No disponible'}`;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Borrar';
+                deleteButton.classList.add('delete-button');
+                deleteButton.addEventListener('click', function () {
+                    deleteAuthor(author);
+                    authorBox.remove();
+                });
+
+                authorBox.appendChild(authorItem);
+                authorBox.appendChild(messageItem);
+                authorBox.appendChild(deleteButton);
+                authorsContainer.appendChild(authorBox);
+            });
+        })
+        .catch(error => handleError(error, 'Error al cargar los autores'));
 }
 
-mensajesDiv.addEventListener("click", function (event) {
-    if (event.target.classList.contains("btn2")) {
-        var index = event.target.getAttribute("data-index");
-        borrarMensaje(index);
-    }
-});
-
-mostrarMensajes();
+function deleteAuthor(author) {
+    fetch('http://localhost:4000/eliminarAutor', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        loadAuthors();
+    })}

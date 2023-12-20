@@ -1,38 +1,93 @@
+document.addEventListener('DOMContentLoaded', function () {
+    loadAuthors(); 
+});
 
-var userDataArray = JSON.parse(localStorage.getItem("userDataArray")) || [];
+function deleteAuthor(author, authorBox) {
+    fetch('http://localhost:3000/eliminarAutor', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        authorBox.remove();
+        loadMessages();
+    })
+    .catch(error => handleError(error, 'Error al borrar el autor'));
+}
 
-function mostrarMensajes() {
-    var mensajesDiv = document.getElementById("mensajes");
-    mensajesDiv.innerHTML = "";
+function loadAuthors() {
+    fetch('http://localhost:3000/obtenerPosts')
+        .then(response => response.json())
+        .then(data => {
+            const authorsContainer = document.getElementById('authorsContainer');
+            authorsContainer.innerHTML = '';
 
-    if (userDataArray.length > 0) {
-        userDataArray.forEach(function (userData, index) {
-            var mensajeHTML = `
-                <div class="caja">
-                    <p>${userData.email || ""}</p>
-                    <button class="btn-borrar" data-index="${index}">Borrar</button>
-                </div>`;
-            mensajesDiv.innerHTML += mensajeHTML;
-        });
+            const authorsArray = [];
 
-     
-        var botonesBorrar = document.querySelectorAll(".btn-borrar");
-        botonesBorrar.forEach(function (boton) {
-            boton.addEventListener("click", function () {
-                var index = boton.getAttribute("data-index");
-                borrarMensaje(index);
+            data.posts.forEach(post => {
+                const author = post.author;
+                if (!authorsArray.includes(author)) {
+                    authorsArray.push(author);
+
+                    const authorBox = document.createElement('div');
+                    authorBox.classList.add('author-box');
+
+                    const authorItem = document.createElement('span');
+                    authorItem.classList.add('author-name');
+                    authorItem.textContent = author;
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Borrar';
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.addEventListener('click', function () {
+                        deleteAuthor(author, authorBox);
+                    });
+
+                    authorBox.appendChild(authorItem);
+                    authorBox.appendChild(deleteButton);
+                    authorsContainer.appendChild(authorBox);
+                }
             });
-        });
-    } else {
-        mensajesDiv.innerHTML =`<p class="nhc">No hay datos</p>`;
-    }
+        })
+        .catch(error => handleError(error, 'Error al cargar los autores'));
+}
+
+function loadMessages() {
+    fetch('http://localhost:3000/obtenerPosts')
+        .then(response => response.json())
+        .then(data => {
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '';
+
+            data.posts.forEach(({ title, author, message }) => {
+                const messageDiv = createMessageDiv(title, author, message);
+                messagesContainer.appendChild(messageDiv);
+            });
+        })
+        .catch(error => handleError(error, 'Error al cargar los mensajes'));
 }
 
 
-function borrarMensaje(index) {
-    userDataArray.splice(index, 1);
-    localStorage.setItem("userDataArray", JSON.stringify(userDataArray));
-    mostrarMensajes();
+
+function deleteMessage(author) {
+    fetch('http://localhost:3000/eliminarPost', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => handleError(error, 'Error al borrar el mensaje'));
 }
 
-mostrarMensajes();
+function handleError(error, message) {
+    console.error(`${message}: ${error}`);
+}
