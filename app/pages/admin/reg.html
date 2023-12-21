@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="caja">
+            <div class="titulo">
+                <h3>Ingresa los datos</h3>
+            </div>
+            <hr>
+            <form id="messageForm">
+                <input type="text" id="author" placeholder="Autor" required>
+                <input type="text" id="title" placeholder="Título" required>
+                <textarea id="message" placeholder="Mensaje" required></textarea>
+                <button type="button" id="saveButton" onclick="savePost()">Guardar Mensaje</button>
+                <button type="button" id="deleteButton" onclick="deleteMessage()">Borrar Datos</button>
+            </form>
+        </div>
+    </div>
+    <div id="messagesContainer"></div>
+    <div id="currentDateTime"></div>
+
+    <script src="reg.js"></script>
+
+</body>
+
+</html>
