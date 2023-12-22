@@ -13,7 +13,7 @@ app.set('port', port);
 let messages = [];
 
 app.listen(port, () => {
-  console.log('Servidor corriendo en el puerto', port);
+    console.log('Servidor corriendo en el puerto', port);
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,30 +33,30 @@ app.post("/api/register", authentication.register);
 
 // Rutas para mensajes
 app.post("/api/messages", (req, res) => {
-  const { author, title, message, dateTime } = req.body;
-  const newMessage = { author, title, message, dateTime };
-  messages.push(newMessage);
+    const { author, title, message, dateTime } = req.body;
+    const newMessage = { author, title, message, dateTime, messageId: messages.length };
+    messages.push(newMessage);
 
-  res.json({ success: true, messages: messages });
+    res.json({ success: true, messages: messages });
 });
 
-app.delete("/api/messages/:author/:title/:message", (req, res) => {
-  const { author, title, message } = req.params;
-  const index = messages.findIndex(msg => msg.author === author && msg.title === title && msg.message === message);
-  
-  if (index !== -1) {
-    messages.splice(index, 1);
-    res.json({ success: true, messages: messages });
-  } else {
-    res.status(400).json({ success: false, message: 'Mensaje no encontrado' });
-  }
+app.delete("/api/messages/:messageId", (req, res) => {
+    const { messageId } = req.params;
+    const index = messages.findIndex(msg => msg.messageId == messageId);
+
+    if (index !== -1) {
+        messages.splice(index, 1);
+        res.json({ success: true, messages: messages });
+    } else {
+        res.status(400).json({ success: false, message: 'Mensaje no encontrado' });
+    }
 });
 
 app.get("/api/messages", (req, res) => {
-  res.json({ success: true, messages: messages });
+    res.json({ success: true, messages: messages });
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('¡Algo salió mal!');
+    console.error(err.stack);
+    res.status(500).send('¡Algo salió mal!');
 });

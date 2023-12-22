@@ -2,7 +2,6 @@ const authorsArray = [];
 
 document.addEventListener('DOMContentLoaded', function () {
     loadMessages();
-    loadAuthors();
 });
 
 function savePost() {
@@ -26,15 +25,17 @@ function savePost() {
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        loadAuthors();
+        loadAuthors(author, formattedDateTime);
+        
+        window.location.href = 'admin';
     })
     .catch(error => handleError(error, 'Error al guardar el mensaje'));
 }
 
 function updateCurrentDateTime(dateTime) {
-    const currentDateTimeElement = document.getElementById('currentDateTime');
-    if (currentDateTimeElement) {
-        currentDateTimeElement.textContent = `Fecha y Hora Actual: ${dateTime}`;
+    const container = document.getElementById('container');
+    if (container) {
+        container.textContent = `Fecha y Hora Actual: ${dateTime}`;
     }
 }
 
@@ -53,18 +54,25 @@ function loadMessages() {
             return response.json();
         })
         .then(data => {
-            const messagesContainer = document.getElementById('messagesContainer');
-            messagesContainer.innerHTML = '';
+            const container = document.getElementById('container');
+            if (!container) return;
 
-            data.messages.forEach(({ author, title, message, dateTime }) => {
-                const messageDiv = createMessageDiv(title, author, message, dateTime);
-                messagesContainer.appendChild(messageDiv);
+            container.innerHTML = '';
+
+            if (data.messages.length === 0) {
+                container.textContent = 'No hay mensajes.';
+                return;
+            }
+
+            data.messages.forEach(({ author, title, message, dateTime, messageId }) => {
+                const messageDiv = createMessageDiv(title, author, message, dateTime, messageId);
+                container.appendChild(messageDiv);
             });
         })
         .catch(error => handleError(error, 'Error al cargar los mensajes'));
 }
 
-function createMessageDiv(title, author, message, dateTime) {
+function createMessageDiv(title, author, message, dateTime, messageId) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
     messageDiv.innerHTML = `<h4>${title}</h4><p>Autor: ${author}</p><p>${message}</p>`;
@@ -78,26 +86,41 @@ function createMessageDiv(title, author, message, dateTime) {
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Borrar';
     deleteButton.classList.add('delete-button');
+    deleteButton.dataset.messageId = messageId;
     deleteButton.addEventListener('click', function () {
-        deleteMessage(author, title, message);
+        const messageId = this.dataset.messageId;
+        deleteMessageById(messageId);
         messageDiv.remove();
+        loadAuthors(); 
     });
 
     messageDiv.appendChild(deleteButton);
     return messageDiv;
 }
 
-function deleteMessage(author, title, message) {
-    fetch('http://localhost:4000/api/messages', {
+function deleteMessageById(messageId) {
+    fetch('http://localhost:4000/api/messages/' + messageId, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ author, title, message }),
     })
     .then(response => response.json())
     .then(data => {
         console.log(data);
     })
     .catch(error => handleError(error, 'Error al borrar el mensaje'));
+}
+
+function loadAuthors(author, dateTime) {
+    const authorsContainer = document.getElementById('authorsContainer');
+    if (!authorsContainer) return;
+
+    authorsContainer.innerHTML = '';
+
+    if (author && dateTime) {
+        const authorDiv = document.createElement('div');
+        authorDiv.textContent = `Autor: ${author}, Fecha y Hora: ${dateTime}`;
+        authorsContainer.appendChild(authorDiv);
+    }
 }
