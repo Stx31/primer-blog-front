@@ -1,36 +1,50 @@
-
-let messagesArray = [];
+document.addEventListener('DOMContentLoaded', function () {
+    loadAuthors();
+});
 
 function loadAuthors() {
-    fetch('http://localhost:4000/api/messages')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Error de red - ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            messagesArray = data.messages; 
-            const container = document.getElementById('container');
-            if (!container) return;
+    const authorsContainer = document.getElementById('authorsContainer');
+    if (!authorsContainer) return;
 
-            container.innerHTML = '';
+    authorsContainer.innerHTML = '';
 
-            if (messagesArray.length === 0) {
-                container.textContent = 'No hay mensajes.';
-                return;
-            }
+    const uniqueAuthors = Array.from(new Set(messagesArray.map(message => message.author)));
 
-            const uniqueAuthors = [...new Set(messagesArray.map(message => message.author))];
-            
-            uniqueAuthors.forEach(author => {
-                const authorParagraph = document.createElement('p');
-                authorParagraph.textContent = `Autor: ${author}`;
-                container.appendChild(authorParagraph);
-            });
-        })
-        .catch(error => handleError(error, 'Error al cargar los autores'));
+    uniqueAuthors.forEach(author => {
+        const authorDiv = createAuthorDiv(author);
+        authorsContainer.appendChild(authorDiv);
+    });
 }
 
+function createAuthorDiv(author) {
+    const authorDiv = document.createElement('div');
+    authorDiv.classList.add('author');
+    authorDiv.textContent = `Autor: ${author}`;
 
-document.addEventListener('DOMContentLoaded', loadAuthors);
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Borrar Autor';
+    deleteButton.classList.add('delete-button');
+    deleteButton.addEventListener('click', function () {
+        deleteAuthor(author);
+        authorDiv.remove();
+    });
+
+    authorDiv.appendChild(deleteButton);
+    return authorDiv;
+}
+
+function deleteAuthor(author) {
+  
+    fetch('http://localhost:4000/api/authors', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ author }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => handleError(error, 'Error al borrar el autor'));
+}

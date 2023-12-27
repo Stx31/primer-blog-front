@@ -1,7 +1,10 @@
+
+const messagesArray = [];
 const authorsArray = [];
 
 document.addEventListener('DOMContentLoaded', function () {
     loadMessages();
+    loadAuthors();
 });
 
 function savePost() {
@@ -11,10 +14,13 @@ function savePost() {
     const currentDate = new Date();
     const formattedDateTime = formatTime(currentDate);
 
-    authorsArray.push({ author, dateTime: formattedDateTime });
 
+    messagesArray.push({ author, title, message, dateTime: formattedDateTime });
+
+ 
     updateCurrentDateTime(formattedDateTime);
 
+   
     fetch('http://localhost:4000/api/messages', {
         method: 'POST',
         headers: {
@@ -25,8 +31,9 @@ function savePost() {
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        loadAuthors(author, formattedDateTime);
-        
+       
+        loadAuthors();
+       
         window.location.href = 'admin';
     })
     .catch(error => handleError(error, 'Error al guardar el mensaje'));
@@ -64,6 +71,9 @@ function loadMessages() {
                 return;
             }
 
+        
+            messagesArray.push(...data.messages);
+
             data.messages.forEach(({ author, title, message, dateTime, messageId }) => {
                 const messageDiv = createMessageDiv(title, author, message, dateTime, messageId);
                 container.appendChild(messageDiv);
@@ -91,7 +101,7 @@ function createMessageDiv(title, author, message, dateTime, messageId) {
         const messageId = this.dataset.messageId;
         deleteMessageById(messageId);
         messageDiv.remove();
-        loadAuthors(); 
+        loadMessages(); 
     });
 
     messageDiv.appendChild(deleteButton);
@@ -110,17 +120,4 @@ function deleteMessageById(messageId) {
         console.log(data);
     })
     .catch(error => handleError(error, 'Error al borrar el mensaje'));
-}
-
-function loadAuthors(author, dateTime) {
-    const authorsContainer = document.getElementById('authorsContainer');
-    if (!authorsContainer) return;
-
-    authorsContainer.innerHTML = '';
-
-    if (author && dateTime) {
-        const authorDiv = document.createElement('div');
-        authorDiv.textContent = `Autor: ${author}, Fecha y Hora: ${dateTime}`;
-        authorsContainer.appendChild(authorDiv);
-    }
 }
