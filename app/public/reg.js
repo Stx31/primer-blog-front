@@ -1,6 +1,4 @@
-
 const messagesArray = [];
-const authorsArray = [];
 
 document.addEventListener('DOMContentLoaded', function () {
     loadMessages();
@@ -14,26 +12,23 @@ function savePost() {
     const currentDate = new Date();
     const formattedDateTime = formatTime(currentDate);
 
+    const newMessage = { author, title, message, dateTime: formattedDateTime };
+    messagesArray.push(newMessage);
 
-    messagesArray.push({ author, title, message, dateTime: formattedDateTime });
-
- 
     updateCurrentDateTime(formattedDateTime);
 
-   
     fetch('http://localhost:4000/api/messages', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ author, title, message, dateTime: formattedDateTime }),
+        body: JSON.stringify(newMessage),
     })
     .then(response => response.json())
     .then(data => {
         console.log(data);
-       
-        loadAuthors();
-       
+        loadAuthors(); 
+        loadMessages();
         window.location.href = 'admin';
     })
     .catch(error => handleError(error, 'Error al guardar el mensaje'));
@@ -71,7 +66,7 @@ function loadMessages() {
                 return;
             }
 
-        
+            messagesArray.length = 0;
             messagesArray.push(...data.messages);
 
             data.messages.forEach(({ author, title, message, dateTime, messageId }) => {
@@ -80,6 +75,37 @@ function loadMessages() {
             });
         })
         .catch(error => handleError(error, 'Error al cargar los mensajes'));
+}
+
+function loadAuthors() {
+    const authorsDropdown = document.getElementById('authorsDropdown');
+
+    fetch('http://localhost:4000/api/authors')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error de red - ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (authorsDropdown) {
+                authorsDropdown.innerHTML = '';
+
+                if (data.authors.length === 0) {
+                    const defaultOption = document.createElement('option');
+                    defaultOption.textContent = 'No hay autores';
+                    authorsDropdown.appendChild(defaultOption);
+                } else {
+                    data.authors.forEach(author => {
+                        const option = document.createElement('option');
+                        option.value = author;
+                        option.textContent = author;
+                        authorsDropdown.appendChild(option);
+                    });
+                }
+            }
+        })
+        .catch(error => handleError(error, 'Error al cargar los autores'));
 }
 
 function createMessageDiv(title, author, message, dateTime, messageId) {
@@ -97,19 +123,36 @@ function createMessageDiv(title, author, message, dateTime, messageId) {
     deleteButton.textContent = 'Borrar';
     deleteButton.classList.add('delete-button');
     deleteButton.dataset.messageId = messageId;
+    deleteButton.dataset.author = author;
     deleteButton.addEventListener('click', function () {
         const messageId = this.dataset.messageId;
-        deleteMessageById(messageId);
-        messageDiv.remove();
-        loadMessages(); 
+        const author = this.dataset.author;
+        deleteMessageById(messageId, author);
     });
 
     messageDiv.appendChild(deleteButton);
     return messageDiv;
 }
 
-function deleteMessageById(messageId) {
-    fetch('http://localhost:4000/api/messages/' + messageId, {
+function deleteMessageById(messageId, author) {
+    fetch(`http://localhost:4000/api/messages/${messageId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        deleteMessagesByAuthor(author);
+        loadMessages();
+        loadAuthors(); 
+    })
+    .catch(error => handleError(error, 'Error al borrar el mensaje'));
+}
+
+function deleteMessagesByAuthor(author) {
+    fetch(`http://localhost:4000/api/messages/byAuthor/${author}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -119,5 +162,30 @@ function deleteMessageById(messageId) {
     .then(data => {
         console.log(data);
     })
-    .catch(error => handleError(error, 'Error al borrar el mensaje'));
+    .catch(error => handleError(error, 'Error al borrar los mensajes del autor'));
+}
+
+function deleteAllMessagesByAuthor() {
+    const authorDropdown = document.getElementById('authorsDropdown');
+    const selectedAuthor = authorDropdown.value;
+
+    if (selectedAuthor) {
+        fetch(`http://localhost:4000/api/messages/byAuthor/${selectedAuthor}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            loadMessages();
+            loadAuthors(); 
+        })
+        .catch(error => handleError(error, 'Error al borrar los mensajes del autor'));
+    }
+}
+
+function handleError(error, message) {
+    console.error(`${message}: ${error}`);
 }
