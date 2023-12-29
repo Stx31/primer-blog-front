@@ -10,7 +10,8 @@ const app = express();
 const port = process.env.PORT || 4000;
 app.set('port', port);
 
-let messages = [];
+let messages = []; 
+
 
 app.listen(port, () => {
     console.log('Servidor corriendo en el puerto', port);
@@ -51,6 +52,13 @@ app.delete("/api/messages/:messageId", (req, res) => {
         res.status(400).json({ success: false, message: 'Mensaje no encontrado' });
     }
 });
+app.delete('/api/messages/byAuthor/:author', (req, res) => {
+    const author = req.params.author;
+    messages = messages.filter(message => message.author !== author);
+    res.json({ success: true, message: `Mensajes de ${author} eliminados correctamente` });
+});
+
+
 
 app.get("/api/messages", (req, res) => {
     res.json({ success: true, messages: messages });

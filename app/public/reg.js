@@ -1,3 +1,4 @@
+const authorsArray = [];
 const messagesArray = [];
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -14,6 +15,7 @@ function savePost() {
 
     const newMessage = { author, title, message, dateTime: formattedDateTime };
     messagesArray.push(newMessage);
+    authorsArray.push(author);
 
     updateCurrentDateTime(formattedDateTime);
 
@@ -135,20 +137,28 @@ function createMessageDiv(title, author, message, dateTime, messageId) {
 }
 
 function deleteMessageById(messageId, author) {
-    fetch(`http://localhost:4000/api/messages/${messageId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        deleteMessagesByAuthor(author);
-        loadMessages();
-        loadAuthors(); 
-    })
-    .catch(error => handleError(error, 'Error al borrar el mensaje'));
+   
+    fetch(`http://localhost:4000/api/messages/byAuthor/${author}`)
+        .then(response => response.json())
+        .then(data => {
+         
+            deleteMessagesByAuthor(author);
+   
+            fetch(`http://localhost:4000/api/messages/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                loadMessages();
+                loadAuthors(); 
+            })
+            .catch(error => handleError(error, 'Error al borrar el mensaje'));
+        })
+        .catch(error => handleError(error, 'Error al obtener mensajes del autor'));
 }
 
 function deleteMessagesByAuthor(author) {
@@ -161,9 +171,11 @@ function deleteMessagesByAuthor(author) {
     .then(response => response.json())
     .then(data => {
         console.log(data);
+        loadMessages();
     })
     .catch(error => handleError(error, 'Error al borrar los mensajes del autor'));
 }
+
 
 function deleteAllMessagesByAuthor() {
     const authorDropdown = document.getElementById('authorsDropdown');

@@ -11,23 +11,8 @@
 <body>
     <h1>Autores</h1>
     <div id="authorsContainer"></div>
-
-    <!-- Espera a que la página se cargue completamente -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Cuando la página está completamente cargada, carga los scripts
-            // en el orden correcto
-            var regScript = document.createElement('script');
-            regScript.src = 'reg.js';
-            regScript.onload = function () {
-        
-                var autoresScript = document.createElement('script');
-                autoresScript.src = 'autores.js';
-                document.body.appendChild(autoresScript);
-            };
-            document.body.appendChild(regScript);
-        });
-    </script>
+    
+    <script src="autores.js"></script>
 </body>
 
 </html>
