@@ -1,13 +1,10 @@
-const authorsArray = [];
+const authorsContainer = document.getElementById('authorsContainer');
 
 document.addEventListener('DOMContentLoaded', function () {
     loadAuthors();
 });
 
 function loadAuthors() {
-    const authorsContainer = document.getElementById('authorsContainer');
-    if (!authorsContainer) return;
-
     fetch('http://localhost:4000/api/authors')
         .then(response => {
             if (!response.ok) {
@@ -20,25 +17,17 @@ function loadAuthors() {
                 authorsContainer.innerHTML = '';
 
                 if (data.authors.length === 0) {
-                    const noAuthorsMessage = document.createElement('p');
-                    noAuthorsMessage.textContent = 'No hay autores.';
-                    authorsContainer.appendChild(noAuthorsMessage);
+                    authorsContainer.textContent = 'No hay autores';
                 } else {
                     data.authors.forEach(author => {
-                        const authorDiv = createAuthorDiv(author);
-                        authorsContainer.appendChild(authorDiv);
+                        const authorParagraph = document.createElement('p');
+                        authorParagraph.textContent = author;
+                        authorsContainer.appendChild(authorParagraph);
                     });
                 }
             }
         })
         .catch(error => handleError(error, 'Error al cargar los autores'));
-}
-
-function createAuthorDiv(author) {
-    const authorDiv = document.createElement('div');
-    authorDiv.classList.add('author');
-    authorDiv.textContent = `Autor: ${author}`;
-    return authorDiv;
 }
 
 function handleError(error, message) {
