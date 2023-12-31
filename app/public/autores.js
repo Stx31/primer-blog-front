@@ -20,14 +20,40 @@ function loadAuthors() {
                     authorsContainer.textContent = 'No hay autores';
                 } else {
                     data.authors.forEach(author => {
+                        const authorContainer = document.createElement('div');
+                        authorContainer.classList.add('author-container');
+
                         const authorParagraph = document.createElement('p');
                         authorParagraph.textContent = author;
-                        authorsContainer.appendChild(authorParagraph);
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Borrar';
+                        deleteButton.classList.add('delete-button');
+                        deleteButton.addEventListener('click', () => deleteAuthor(author));
+
+                        authorContainer.appendChild(authorParagraph);
+                        authorContainer.appendChild(deleteButton);
+                        authorsContainer.appendChild(authorContainer);
                     });
                 }
             }
         })
         .catch(error => handleError(error, 'Error al cargar los autores'));
+}
+
+function deleteAuthor(author) {
+    fetch(`http://localhost:4000/api/authors/${author}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        loadAuthors();
+    })
+    .catch(error => handleError(error, 'Error al borrar el autor'));
 }
 
 function handleError(error, message) {
