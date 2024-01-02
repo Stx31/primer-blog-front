@@ -1,69 +1,94 @@
-const authorsContainer = document.getElementById('authorsContainer');
+document.addEventListener('DOMContentLoaded', function () {
+    loadAuthors();
+    loadMessages();
+});
 
-document.addEventListener('DOMContentLoaded', loadAuthors);
+
 
 function loadAuthors() {
+    const authorsDropdown = document.getElementById('authorsDropdown');
+
     fetch('http://localhost:4000/api/authors')
-        .then(handleResponse)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error de red - ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            renderAuthors(data.authors);
+            if (authorsDropdown) {
+                authorsDropdown.innerHTML = '';
+
+                if (data.authors.length === 0) {
+                    const defaultOption = document.createElement('option');
+                    defaultOption.textContent = 'No hay autores';
+                    authorsDropdown.appendChild(defaultOption);
+                } else {
+                    data.authors.forEach(author => {
+                        const option = document.createElement('option');
+                        option.value = author;
+                        option.textContent = author;
+                        authorsDropdown.appendChild(option);
+                    });
+                }
+            }
         })
         .catch(error => handleError(error, 'Error al cargar los autores'));
 }
 
-function renderAuthors(authors) {
-    authorsContainer.innerHTML = '';
+function loadMessages() {
+    fetch('http://localhost:4000/api/messages')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error de red - ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const container = document.getElementById('container');
+            if (!container) return;
 
-    if (authors.length === 0) {
-        authorsContainer.textContent = 'No hay autores';
-    } else {
-        authors.forEach(author => {
-            const authorContainer = document.createElement('div');
-            authorContainer.classList.add('author-container');
+            container.innerHTML = '';
 
-            const authorParagraph = document.createElement('p');
-            authorParagraph.textContent = author.name;
+            if (data.messages.length === 0) {
+                container.textContent = 'No hay mensajes.';
+                return;
+            }
 
-            const deleteButton = createDeleteButton(author.id);
-
-            authorContainer.appendChild(authorParagraph);
-            authorContainer.appendChild(deleteButton);
-            authorsContainer.appendChild(authorContainer);
-        });
-    }
+            data.messages.forEach(({ author, title, message, dateTime, messageId }) => {
+                const messageDiv = createMessageDiv(title, author, message, dateTime, messageId);
+                container.appendChild(messageDiv);
+            });
+        })
+        .catch(error => handleError(error, 'Error al cargar los mensajes'));
 }
 
-function createDeleteButton(authorId) {
+function createMessageDiv(title, author, message, dateTime, messageId) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.innerHTML = `<p>Autor: ${author}</p>`;
+
+    if (dateTime) {
+        const dateTimeParagraph = document.createElement('p');
+        dateTimeParagraph.textContent = `Hora: ${dateTime}`;
+        messageDiv.appendChild(dateTimeParagraph);
+    }
+
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Borrar';
     deleteButton.classList.add('delete-button');
-    deleteButton.addEventListener('click', () => deleteAuthor(authorId));
-    return deleteButton;
-}
+    deleteButton.dataset.messageId = messageId;
+    deleteButton.dataset.author = author;
+    deleteButton.addEventListener('click', function () {
+        const messageId = this.dataset.messageId;
+        const author = this.dataset.author;
+        deleteMessageById(messageId, author);
+    });
 
-function deleteAuthor(authorId) {
-    fetch(`http://localhost:4000/api/authors/${authorId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(handleResponse)
-    .then(() => loadAuthors())
-    .catch(error => handleError(error, 'Error al borrar el autor'));
-}
-
-function handleResponse(response) {
-    if (!response.ok) {
-        throw new Error(`Error de red - ${response.status}`);
-    }
-    return response.json();
+    messageDiv.appendChild(deleteButton);
+    return messageDiv;
 }
 
 function handleError(error, message) {
     console.error(`${message}: ${error}`);
 }
-
-document.getElementById('volverButton').addEventListener('click', function() {
-    window.location.href = 'admin.html';
-});
