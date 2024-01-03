@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     loadMessages();
 });
 
-
-
 function loadAuthors() {
     const authorsDropdown = document.getElementById('authorsDropdown');
 
@@ -87,6 +85,23 @@ function createMessageDiv(title, author, message, dateTime, messageId) {
 
     messageDiv.appendChild(deleteButton);
     return messageDiv;
+}
+
+function deleteMessageById(messageId, author) {
+    fetch(`http://localhost:4000/api/messages/${messageId}`, {
+        method: 'DELETE',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error de red - ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+    
+        loadMessages();
+    })
+    .catch(error => handleError(error, 'Error al borrar el mensaje'));
 }
 
 function handleError(error, message) {
