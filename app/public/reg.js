@@ -137,13 +137,15 @@ function createMessageDiv(title, author, message, dateTime, messageId) {
 }
 
 function deleteMessageById(messageId, author) {
-   
+    console.log("Delete button clicked");
+
     fetch(`http://localhost:4000/api/messages/byAuthor/${author}`)
         .then(response => response.json())
         .then(data => {
-         
+            console.log("Messages by author:", data);
+
             deleteMessagesByAuthor(author);
-   
+
             fetch(`http://localhost:4000/api/messages/${messageId}`, {
                 method: 'DELETE',
                 headers: {
@@ -152,14 +154,15 @@ function deleteMessageById(messageId, author) {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                console.log("Message deleted:", data);
                 loadMessages();
-                loadAuthors(); 
+                loadAuthors();
             })
             .catch(error => handleError(error, 'Error al borrar el mensaje'));
         })
         .catch(error => handleError(error, 'Error al obtener mensajes del autor'));
 }
+
 
 function deleteMessagesByAuthor(author) {
     fetch(`http://localhost:4000/api/messages/byAuthor/${author}`, {
