@@ -137,30 +137,26 @@ function createMessageDiv(title, author, message, dateTime, messageId) {
 }
 
 function deleteMessageById(messageId, author) {
-    console.log("Delete button clicked");
-
-    fetch(`http://localhost:4000/api/messages/byAuthor/${author}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log("Messages by author:", data);
-
-            deleteMessagesByAuthor(author);
-
-            fetch(`http://localhost:4000/api/messages/${messageId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Message deleted:", data);
-                loadMessages();
-                loadAuthors();
-            })
-            .catch(error => handleError(error, 'Error al borrar el mensaje'));
-        })
-        .catch(error => handleError(error, 'Error al obtener mensajes del autor'));
+    fetch(`http://localhost:4000/api/messages/${messageId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error de red - ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Message deleted:", data);
+        loadMessages();
+        loadAuthors();
+    })
+    .catch(error => {
+        handleError(error, 'Error al borrar el mensaje');
+    });
 }
 
 

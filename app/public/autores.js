@@ -2,6 +2,18 @@ document.addEventListener('DOMContentLoaded', function () {
     loadAuthors();
     loadMessages();
 });
+document.addEventListener('DOMContentLoaded', function () {
+    loadAuthors();
+    loadMessages();
+
+    const volverButton = document.getElementById('volverButton');
+    if (volverButton) {
+        volverButton.addEventListener('click', function () {
+            
+            window.location.href = 'admin';
+        });
+    }
+});
 
 function loadAuthors() {
     const authorsDropdown = document.getElementById('authorsDropdown');
