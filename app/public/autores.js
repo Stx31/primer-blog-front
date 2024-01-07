@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadAuthors();
     loadMessages();
 });
+
 document.addEventListener('DOMContentLoaded', function () {
     loadAuthors();
     loadMessages();
@@ -9,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const volverButton = document.getElementById('volverButton');
     if (volverButton) {
         volverButton.addEventListener('click', function () {
-            
             window.location.href = 'admin';
         });
     }
@@ -65,9 +65,15 @@ function loadMessages() {
                 return;
             }
 
+           
+            const selectedAuthor = document.getElementById('authorsDropdown').value;
+
             data.messages.forEach(({ author, title, message, dateTime, messageId }) => {
-                const messageDiv = createMessageDiv(title, author, message, dateTime, messageId);
-                container.appendChild(messageDiv);
+               
+                if (author === selectedAuthor) {
+                    const messageDiv = createMessageDiv(title, author, message, dateTime, messageId);
+                    container.appendChild(messageDiv);
+                }
             });
         })
         .catch(error => handleError(error, 'Error al cargar los mensajes'));
@@ -100,7 +106,8 @@ function createMessageDiv(title, author, message, dateTime, messageId) {
 }
 
 function deleteMessageById(messageId, author) {
-    fetch(`http://localhost:4000/api/messages/${messageId}`, {
+  
+    fetch(`http://localhost:4000/api/messages?author=${author}`, {
         method: 'DELETE',
     })
     .then(response => {
@@ -110,7 +117,6 @@ function deleteMessageById(messageId, author) {
         return response.json();
     })
     .then(data => {
-    
         loadMessages();
     })
     .catch(error => handleError(error, 'Error al borrar el mensaje'));
