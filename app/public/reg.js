@@ -197,6 +197,16 @@ function deleteAllMessagesByAuthor() {
     }
 }
 
+function deleteMessage() {
+   
+    document.getElementById('author').value = '';
+    document.getElementById('title').value = '';
+    document.getElementById('message').value = '';
+
+   
+    window.location.href = 'admin';
+}
+
 function handleError(error, message) {
     console.error(`${message}: ${error}`);
 }
